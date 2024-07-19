@@ -8,7 +8,6 @@ env:
     AWS_REGION: ap-northeast-2
     ECR_REPOSITORY: devlog
     IMAGE_TAG: ${{ github.sha }}
-    EC2_USER: ubuntu
 
 jobs:
     deploy:
@@ -62,14 +61,25 @@ jobs:
                     --protocol tcp \
                     --port 22 \
                     --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+            - name: Setup SSH key
+              env:
+                  PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
             - name: Deploy to EC2
               env:
                   HOST: ${{ secrets.EC2_HOST }}
+                  USER: ubuntu
               run: |
-                  ssh -o StrictHostKeyChecking=no ${{ env.EC2_USER }}@${HOST} '
-                    sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-                    sudo docker pull ${{ steps.build-image.outputs.image }}
-                    sudo docker stop nextjs-app || true
-                    sudo docker rm nextjs-app || true
-                    sudo docker run -d --name nextjs-app -p 80:3000 ${{ steps.build-image.outputs.image }}
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} '
+                  sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+                  sudo docker pull ${{ steps.build-image.outputs.image }}
+                  sudo docker stop nextjs-app || true
+                  sudo docker rm nextjs-app || true
+                  sudo docker run -d --name nextjs-app -p 80:3000 ${{ steps.build-image.outputs.image }}
                   '
