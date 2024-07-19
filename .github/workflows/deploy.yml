@@ -84,5 +84,5 @@ jobs:
                   sudo docker pull ${{ steps.build-image.outputs.image }}
                   sudo docker stop devlog || true
                   sudo docker rm devlog || true
-                  sudo docker run -d --name devlog -p 80:3000 ${{ steps.build-image.outputs.image }}
+                  sudo docker run -d --name devlog -p 3000:3000 ${{ steps.build-image.outputs.image }}
                   exit
