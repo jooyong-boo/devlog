@@ -38,12 +38,17 @@ jobs:
                   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
                   echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-
+            - name: Setup SSH key
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             - name: Deploy to EC2
               env:
-                  PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+                  PRIVATE_KEY: ${{ secrets.EC2_KEY }}
                   HOST: ${{ secrets.EC2_HOST }}
-                  USER: ec2-user
+                  USER: ubuntu
               run: |
                   echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
                   ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
