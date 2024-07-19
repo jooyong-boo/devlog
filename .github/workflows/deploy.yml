@@ -79,7 +79,7 @@ jobs:
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} '
                   sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
                   sudo docker pull ${{ steps.build-image.outputs.image }}
-                  sudo docker stop nextjs-app || true
-                  sudo docker rm nextjs-app || true
-                  sudo docker run -d --name nextjs-app -p 80:3000 ${{ steps.build-image.outputs.image }}
+                  sudo docker stop devlog || true
+                  sudo docker rm devlog || true
+                  sudo docker run -d --name devlog -p 80:3000 ${{ steps.build-image.outputs.image }}
                   '
