@@ -76,10 +76,13 @@ jobs:
                   HOST: ${{ secrets.EC2_HOST }}
                   USER: ubuntu
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} '
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} << EOF
+                  sudo -i
+                  systemctl stop nginx
+                  systemctl disable nginx
                   sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
                   sudo docker pull ${{ steps.build-image.outputs.image }}
                   sudo docker stop devlog || true
                   sudo docker rm devlog || true
                   sudo docker run -d --name devlog -p 80:3000 ${{ steps.build-image.outputs.image }}
-                  '
+                  exit
