@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECR
+name: Deploy to Amazon ECR and EC2
 
 on:
     push:
@@ -25,9 +25,6 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ env.AWS_REGION }}
-            - name: Get GitHub Actions IP
-              id: ip
-              uses: haythem/public-ip@v1.2
 
             - name: Login to Amazon ECR
               id: login-ecr
@@ -37,7 +34,7 @@ jobs:
               run: |
                   IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query 'imageIds[?type(imageTag)!=`null`].[imageDigest]' --output text)
                   if [ ! -z "$IMAGES_TO_DELETE" ]; then
-                    aws ecr batch-delete-image --repository-name $ECR_REPOSITORY --image-ids "$IMAGES_TO_DELETE" || true
+                    aws ecr batch-delete-image --repository-name $ECR_REPOSITORY --image-ids $(echo $IMAGES_TO_DELETE | tr '\n' ' ' | sed 's/[[:space:]]*$//')
                   fi
 
             - name: Build, tag, and push image to Amazon ECR
@@ -48,11 +45,10 @@ jobs:
                   docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                   docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
                   echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-            - name: Get GitHub Actions IP ranges
-              id: ip_ranges
-              run: |
-                  ACTIONS_RANGES=$(curl -s https://api.github.com/meta | jq -r '.actions | join(",")')
-                  echo "::set-output name=ranges::$ACTIONS_RANGES"
+
+            - name: Get GitHub Actions IP
+              id: ip
+              uses: haythem/public-ip@v1.2
 
             - name: Update EC2 security group
               run: |
@@ -61,6 +57,7 @@ jobs:
                     --protocol tcp \
                     --port 22 \
                     --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
             - name: Deploy to EC2
               env:
                   PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -69,9 +66,18 @@ jobs:
               run: |
                   echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
                   ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} '
-                    aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-                    docker pull ${{ steps.build-image.outputs.image }}
-                    docker stop nextjs-app || true
-                    docker rm nextjs-app || true
-                    docker run -d --name nextjs-app -p 80:3000 ${{ steps.build-image.outputs.image }}
+                    sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+                    sudo docker pull ${{ steps.build-image.outputs.image }}
+                    sudo docker stop nextjs-app || true
+                    sudo docker rm nextjs-app || true
+                    sudo docker run -d --name nextjs-app -p 80:3000 ${{ steps.build-image.outputs.image }}
                   '
+
+            - name: Clean up EC2 security group
+              if: always()
+              run: |
+                  aws ec2 revoke-security-group-ingress \
+                    --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} \
+                    --protocol tcp \
+                    --port 22 \
+                    --cidr ${{ steps.ip.outputs.ipv4 }}/32
