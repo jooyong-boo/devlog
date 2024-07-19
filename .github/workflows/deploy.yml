@@ -25,6 +25,9 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: ${{ env.AWS_REGION }}
+            - name: Get GitHub Actions IP
+              id: ip
+              uses: haythem/public-ip@v1.2
 
             - name: Login to Amazon ECR
               id: login-ecr
@@ -57,7 +60,7 @@ jobs:
                     --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} \
                     --protocol tcp \
                     --port 22 \
-                    --cidr ${{ steps.ip_ranges.outputs.ranges }}
+                    --cidr ${{ steps.ip.outputs.ipv4 }}/32
             - name: Deploy to EC2
               env:
                   PRIVATE_KEY: ${{ secrets.EC2_KEY }}
