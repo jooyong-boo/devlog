@@ -35,9 +35,15 @@ jobs:
 
             - name: Clean up old images
               run: |
-                  IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query 'imageIds[?type(imageTag)!=`null`].[imageDigest]' --output text)
+                  # 최신 5개 이미지 태그를 제외한 모든 이미지 목록 가져오기
+                  IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query 'imageIds[?type(imageTag)!=`null`]' --output json | jq -r '[.[] | select(.imageTag != "${{ github.sha }}")][:(-5)][] | {imageTag:.imageTag}' | jq -c .)
+
+                  # 삭제할 이미지가 있다면 삭제 실행
                   if [ ! -z "$IMAGES_TO_DELETE" ]; then
-                    aws ecr batch-delete-image --repository-name $ECR_REPOSITORY --image-ids "$IMAGES_TO_DELETE" || true
+                    echo "Deleting old images: $IMAGES_TO_DELETE"
+                    aws ecr batch-delete-image --repository-name $ECR_REPOSITORY --image-ids "$IMAGES_TO_DELETE" || echo "Failed to delete some images"
+                  else
+                    echo "No old images to delete"
                   fi
 
             - name: Build, tag, and push image to Amazon ECR
