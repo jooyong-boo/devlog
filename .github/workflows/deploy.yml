@@ -83,12 +83,20 @@ jobs:
                   USER: ubuntu
               run: |
                   ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} << EOF
-                  sudo -i
-                  systemctl stop nginx
-                  systemctl disable nginx
                   sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
                   sudo docker pull ${{ steps.build-image.outputs.image }}
                   sudo docker stop devlog || true
                   sudo docker rm devlog || true
                   sudo docker run -d --name devlog -p 3000:3000 ${{ steps.build-image.outputs.image }}
-                  exit
+
+                  # Nginx 설정이 올바른지 확인
+                  sudo nginx -t
+
+                  # Nginx 설정이 올바르다면 Nginx 재시작
+                  if [ $? -eq 0 ]; then
+                    sudo systemctl restart nginx
+                  else
+                    echo "Nginx configuration test failed. Please check your Nginx configuration."
+                    exit 1
+                  fi
+                  EOF
