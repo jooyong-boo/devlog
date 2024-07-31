@@ -1,0 +1,102 @@
+name: Deploy to Amazon ECR
+
+on:
+    push:
+        branches: ["main"]
+
+env:
+    AWS_REGION: ap-northeast-2
+    ECR_REPOSITORY: devlog
+    IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        environment: production
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
+            - name: Get GitHub Actions IP
+              id: ip
+              uses: haythem/public-ip@v1.2
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Clean up old images
+              run: |
+                  # 최신 5개 이미지 태그를 제외한 모든 이미지 목록 가져오기
+                  IMAGES_TO_DELETE=$(aws ecr list-images --repository-name $ECR_REPOSITORY --query 'imageIds[?type(imageTag)!=`null`]' --output json | jq -r '[.[] | select(.imageTag != "${{ github.sha }}")][:(-5)] | map({imageTag: .imageTag}) | tostring')
+
+                  # 삭제할 이미지가 있다면 삭제 실행
+                  if [ "$IMAGES_TO_DELETE" != "[]" ]; then
+                    echo "Deleting old images: $IMAGES_TO_DELETE"
+                    aws ecr batch-delete-image --repository-name $ECR_REPOSITORY --image-ids "$IMAGES_TO_DELETE" || echo "Failed to delete some images"
+                  else
+                    echo "No old images to delete"
+                  fi
+
+            - name: Build, tag, and push image to Amazon ECR
+              id: build-image
+              env:
+                  ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+              run: |
+                  docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+                  docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+                  echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+            - name: Get GitHub Actions IP ranges
+              id: ip_ranges
+              run: |
+                  ACTIONS_RANGES=$(curl -s https://api.github.com/meta | jq -r '.actions | join(",")')
+                  echo "::set-output name=ranges::$ACTIONS_RANGES"
+
+            - name: Update EC2 security group
+              run: |
+                  aws ec2 authorize-security-group-ingress \
+                    --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} \
+                    --protocol tcp \
+                    --port 22 \
+                    --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+            - name: Setup SSH key
+              env:
+                  PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+            - name: Deploy to EC2
+              env:
+                  HOST: ${{ secrets.EC2_HOST }}
+                  USER: ubuntu
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${USER}@${HOST} << EOF
+                  sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+                  sudo docker pull ${{ steps.build-image.outputs.image }}
+                  sudo docker stop devlog || true
+                  sudo docker rm devlog || true
+                  sudo docker run -d --name devlog -p 3000:3000 ${{ steps.build-image.outputs.image }}
+
+                  # Nginx 설정이 올바른지 확인
+                  sudo nginx -t
+
+                  # Nginx 설정이 올바르다면 Nginx 재시작
+                  if [ $? -eq 0 ]; then
+                    sudo systemctl restart nginx
+                  else
+                    echo "Nginx configuration test failed. Please check your Nginx configuration."
+                    exit 1
+                  fi
+                  EOF
