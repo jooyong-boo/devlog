@@ -14,14 +14,17 @@ const useThemeStore = create<ThemeStore>((set, get) => ({
   toggleTheme: () => {
     const currentTheme = get().theme;
     if (currentTheme === "dark") {
-      document.body.dataset.theme = "";
+      document.documentElement.classList.remove("dark");
+      set(() => ({
+        theme: "",
+      }));
     }
     if (currentTheme === "") {
-      document.body.dataset.theme = "dark";
+      document.documentElement.classList.add("dark");
+      set(() => ({
+        theme: "dark",
+      }));
     }
-    set((state) => ({
-      theme: state.theme === "" ? "dark" : "",
-    }));
   },
 }));
 
