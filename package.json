@@ -1,30 +1,45 @@
 {
-    "name": "devlog",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
-    },
-    "dependencies": {
-        "@prisma/client": "5.17.0",
-        "@svgr/webpack": "^8.1.0",
-        "next": "14.2.5",
-        "react": "^18",
-        "react-dom": "^18",
-        "zustand": "^4.5.4"
-    },
-    "devDependencies": {
-        "@types/node": "^20",
-        "@types/react": "^18",
-        "@types/react-dom": "^18",
-        "eslint": "^8",
-        "eslint-config-next": "14.2.5",
-        "postcss": "^8",
-        "prisma": "^5.17.0",
-        "tailwindcss": "^3.4.1",
-        "typescript": "^5"
-    }
+  "name": "devlog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "format": "prettier --cache --write .",
+    "lint": "next lint --cache --fix --max-warnings=0",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@prisma/client": "5.17.0",
+    "@svgr/webpack": "^8.1.0",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.9",
+    "postcss": "^8",
+    "prisma": "^5.17.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "prettier --cache --write",
+      "eslint --fix --max-warnings=0"
+    ],
+    "*.{json,md}": [
+      "prettier --cache --write"
+    ]
+  }
 }
