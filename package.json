@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --cache --write .",
-    "lint": "next lint --cache --fix --max-warnings=0",
+    "lint": "next lint --fix --max-warnings=0",
     "prepare": "husky install"
   },
   "dependencies": {
