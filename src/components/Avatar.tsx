@@ -1,6 +1,6 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-type AvatarType = "circle" | "square";
+type AvatarType = 'circle' | 'square';
 
 export interface AvatarProps {
   src: string;
@@ -9,12 +9,19 @@ export interface AvatarProps {
   type?: AvatarType;
 }
 
-function Avatar({ alt, src, size = 48, type = "circle" }: AvatarProps) {
+function Avatar({ alt, src, size = 48, type = 'circle' }: AvatarProps) {
   return (
     <div
-      className={`overflow-hidden ${type === "circle" ? "rounded-full" : "rounded-lg"}`}
+      className={`overflow-hidden ${type === 'circle' ? 'rounded-full' : 'rounded-lg'}`}
     >
-      <Image src={src} alt={alt} width={size} height={size} objectFit="cover" />
+      <Image
+        src={src}
+        alt={alt}
+        width={size}
+        height={size}
+        objectFit="cover"
+        className="h-auto w-full"
+      />
     </div>
   );
 }
