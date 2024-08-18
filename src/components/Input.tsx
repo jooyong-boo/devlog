@@ -15,12 +15,12 @@ function Input({ id, label, ...props }: InputProps) {
       )}
       <input
         id={id}
-        {...props}
         className={cn(
           `min-h-8 rounded-[4px] px-2 py-1 text-sm focus:outline-none`,
           `border border-slate-300`,
           `text-slate-900 placeholder:text-slate-400`,
         )}
+        {...props}
       />
     </form>
   );
