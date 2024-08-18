@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Darkmode from "@/layouts/Header/components/Darkmode";
-import MobileMenu from "@/layouts/Header/components/MobileMenu";
-import PCMenu from "@/layouts/Header/components/PCMenu";
-import Link from "next/link";
+import Link from 'next/link';
+import Darkmode from '@/layouts/Header/components/Darkmode';
+import MobileMenu from '@/layouts/Header/components/MobileMenu';
+import PCMenu from '@/layouts/Header/components/PCMenu';
 
 function Header() {
   return (
