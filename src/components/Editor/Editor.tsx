@@ -1,19 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import CodeBlock from '@tiptap/extension-code-block';
+import React from 'react';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Underline from '@tiptap/extension-underline';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, ReactNodeViewRenderer } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { common, createLowlight } from 'lowlight';
+import css from 'highlight.js/lib/languages/css';
+import js from 'highlight.js/lib/languages/javascript';
+import josn from 'highlight.js/lib/languages/json';
+import ts from 'highlight.js/lib/languages/typescript';
+import html from 'highlight.js/lib/languages/xml';
+import { createLowlight, all } from 'lowlight';
 import { Markdown } from 'tiptap-markdown';
+import CodeBlock from '@/components/Editor/CodeBlock';
 import Toolbar from '@/components/Editor/Toolbar';
 import { cn } from '@/utils/cn';
 import './editor.css';
+
+const lowlight = createLowlight();
+
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('js', js);
+lowlight.register('ts', ts);
+lowlight.register('json', josn);
 
 const Editor = () => {
   const [text, setText] = useState('<p>Hello World! 🌎️</p>');
@@ -28,11 +42,13 @@ const Editor = () => {
         defaultProtocol: 'https',
       }),
       Markdown,
-      CodeBlock.configure({
+      CodeBlockLowlight.extend({
+        addNodeView() {
+          return ReactNodeViewRenderer(CodeBlock);
+        },
+      }).configure({
         languageClassPrefix: 'language-',
-      }),
-      CodeBlockLowlight.configure({
-        lowlight: createLowlight(common),
+        lowlight,
       }),
       Highlight.configure({
         multicolor: true,

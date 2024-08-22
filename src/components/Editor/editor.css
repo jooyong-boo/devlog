@@ -137,7 +137,8 @@
 }
 
 @layer components {
-  .codeblock {
+  .code-block {
+    position: relative;
     pre {
       background: #0d0d0d;
       color: #fff;
@@ -202,6 +203,15 @@
 
       .hljs-strong {
         font-weight: 700;
+      }
+    }
+    select {
+      position: absolute;
+      background-color: white;
+      right: 0.5rem;
+      top: 0.5rem;
+      &:focus {
+        outline: none;
       }
     }
   }
