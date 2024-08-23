@@ -1,4 +1,3 @@
-import { useCallback, useRef } from 'react';
 import { type Editor } from '@tiptap/react';
 import {
   Bold,
@@ -7,58 +6,23 @@ import {
   H1,
   H2,
   H3,
-  ImageUpload,
-  Link,
   Numbered,
   Strike,
   Underlined,
   LinkUnset,
   Highlight,
 } from '@/assets/svg/editor/index';
+import ImageUpload from '@/components/Editor/extension/ImageUpload';
+import Link from '@/components/Editor/extension/Link';
 import { tailwindTheme } from '@/utils/tailwindTheme';
 
-const Toolbar = ({ editor }: { editor: Editor }) => {
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
+export interface ToolbarProps {
+  editor: Editor;
+}
 
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-  }, [editor]);
-
-  const imageRef = useRef<HTMLInputElement>(null);
-
-  const handleUploadImage = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-
-    const fileExt = file?.name.split('.').pop();
-    const fullFilename = `${fileExt}`;
-  };
-
-  const handleClickUpload = () => {
-    if (imageRef.current) {
-      imageRef.current.click();
-    }
-  };
-  if (!editor) {
-    return null;
-  }
+const Toolbar = ({ editor }: ToolbarProps) => {
   return (
-    <div className="flex flex-wrap gap-2 fill-slate-900 p-1">
+    <div className="fill-slate-90 flex flex-wrap gap-2 border p-2">
       <div className="flex items-center gap-1">
         <button
           onClick={() =>
@@ -140,25 +104,11 @@ const Toolbar = ({ editor }: { editor: Editor }) => {
       >
         <Highlight />
       </button>
-      <button
-        onClick={setLink}
-        className={editor.isActive('link') ? 'is-active' : ''}
-      >
-        <Link />
-      </button>
+      <Link editor={editor} />
       <button onClick={() => editor.chain().focus().unsetLink().run()}>
         <LinkUnset />
       </button>
-      <button onClick={handleClickUpload}>
-        <ImageUpload />
-        <input
-          ref={imageRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleUploadImage}
-        />
-      </button>
+      <ImageUpload editor={editor} />
     </div>
   );
 };
