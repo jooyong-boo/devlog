@@ -21,6 +21,11 @@ import Toolbar from '@/components/Editor/Toolbar';
 import { cn } from '@/utils/cn';
 import './editor.css';
 
+interface EditorProps {
+  value?: string;
+  onChange?: (text: string) => void;
+}
+
 const lowlight = createLowlight();
 
 lowlight.register('html', html);
@@ -29,8 +34,8 @@ lowlight.register('js', js);
 lowlight.register('ts', ts);
 lowlight.register('json', josn);
 
-const Editor = () => {
-  const [text, setText] = useState('<p>Hello World! 🌎️</p>');
+const Editor = ({ onChange, value }: EditorProps) => {
+  const [text, setText] = useState(value);
 
   const editor = useEditor({
     extensions: [
@@ -59,6 +64,7 @@ const Editor = () => {
     content: text,
     onUpdate({ editor }) {
       setText(editor.getHTML());
+      onChange?.(editor.getHTML());
     },
   });
 
