@@ -23,7 +23,9 @@
     "@tiptap/react": "^2.6.5",
     "@tiptap/starter-kit": "^2.6.5",
     "clsx": "^2.1.1",
+    "dompurify": "^3.1.6",
     "highlight.js": "^11.10.0",
+    "jsdom": "^24.1.1",
     "lowlight": "^3.1.0",
     "next": "14.2.5",
     "react": "^18",
@@ -33,6 +35,8 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
