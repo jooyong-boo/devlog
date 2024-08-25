@@ -11,6 +11,10 @@ const config: Config = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  safelist: [
+    {
+      pattern: /^(bg|text|fill)-(.*)$/,
+    },
+  ],
 };
 export default config;

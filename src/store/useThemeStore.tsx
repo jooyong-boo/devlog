@@ -1,6 +1,7 @@
-import { create } from "zustand";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
-type Theme = "dark" | "";
+type Theme = 'dark' | '';
 
 interface ThemeStore {
   theme: Theme;
@@ -8,24 +9,32 @@ interface ThemeStore {
   toggleTheme: () => void;
 }
 
-const useThemeStore = create<ThemeStore>((set, get) => ({
-  theme: "",
-  setTheme: (theme) => set({ theme }),
-  toggleTheme: () => {
-    const currentTheme = get().theme;
-    if (currentTheme === "dark") {
-      document.documentElement.classList.remove("dark");
-      set(() => ({
-        theme: "",
-      }));
-    }
-    if (currentTheme === "") {
-      document.documentElement.classList.add("dark");
-      set(() => ({
-        theme: "dark",
-      }));
-    }
-  },
-}));
+const useThemeStore = create(
+  persist<ThemeStore>(
+    (set, get) => ({
+      theme: '',
+      setTheme: (theme) => set({ theme }),
+      toggleTheme: () => {
+        const currentTheme = get().theme;
+        if (currentTheme === 'dark') {
+          document.documentElement.classList.remove('dark');
+          set(() => ({
+            theme: '',
+          }));
+        }
+        if (currentTheme === '') {
+          document.documentElement.classList.add('dark');
+          set(() => ({
+            theme: 'dark',
+          }));
+        }
+      },
+    }),
+    {
+      name: 'theme',
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
 
 export default useThemeStore;
