@@ -4,8 +4,11 @@ import { useState } from 'react';
 import CloseSvg from '@/assets/svg/close.svg';
 import Input from '@/components/Input';
 import Label from '@/components/Label';
+import useToast from '@/hooks/useToast';
 
 const TagInput = () => {
+  const { enqueueWarningBar } = useToast();
+
   const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState<string[]>([]);
 
@@ -26,8 +29,7 @@ const TagInput = () => {
       e.preventDefault();
       const newTag = inputValue.trim();
       if (tags.includes(newTag)) {
-        // TODO: Toast 추가하기
-        // enqueueDefaultBar('이미 추가된 태그입니다.', 'error');
+        enqueueWarningBar('이미 추가된 태그입니다.', 'error');
         return;
       }
       setTags([...tags, newTag]);
@@ -50,11 +52,11 @@ const TagInput = () => {
           <Label key={tag}>
             <span>{tag}</span>
             <button
-              className="h-4 w-4 fill-slate-200 hover:fill-slate-50"
+              className="fill-slate-200 hover:fill-slate-50"
               type="button"
               onClick={() => handleRemoveTag(tag)}
             >
-              <CloseSvg />
+              <CloseSvg width={16} height={16} />
             </button>
           </Label>
         ))}
