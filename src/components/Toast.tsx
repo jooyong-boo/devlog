@@ -25,7 +25,6 @@ const StatusIcon = {
   Warning: <Warning />,
   Info: <Info />,
 };
-// TODO: Error: <svg> attribute width: Expected length, "current". 오류 해결하기
 const Toast = ({ id, message, status, ...rest }: Props) => {
   return (
     <div
