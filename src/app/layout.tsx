@@ -33,7 +33,7 @@ export const toasterOptions: DefaultToastOptions = {
         : tailwindTheme.colors.slate[50],
     fontSize: '1rem',
     // TODO: theme dark 적용 안됨 해결하기
-    // ...theme.typography.buttonM,
+    // cookie로 theme 상태를 저장하고, 새로고침 시에도 유지되도록 하기
   },
 };
 
