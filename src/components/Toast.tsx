@@ -20,10 +20,10 @@ enum StatusColor {
 
 const StatusIcon = {
   Default: '',
-  Success: <CheckCircle />,
-  Error: <Error />,
-  Warning: <Warning />,
-  Info: <Info />,
+  Success: <CheckCircle width={20} height={20} />,
+  Error: <Error width={20} height={20} />,
+  Warning: <Warning width={20} height={20} />,
+  Info: <Info width={20} height={20} />,
 };
 const Toast = ({ id, message, status, ...rest }: Props) => {
   return (
@@ -36,7 +36,7 @@ const Toast = ({ id, message, status, ...rest }: Props) => {
       {status !== 'Default' && (
         <div
           className={cn(
-            `material-symbols-rounded text-lg text-${StatusColor[status]} h-5 w-5 fill-${StatusColor[status]}`,
+            `material-symbols-rounded text-lg text-${StatusColor[status]} fill-${StatusColor[status]}`,
           )}
         >
           {StatusIcon[status]}
