@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Close, Github, Google } from '@/assets/svg/index';
 import { menus } from '@/layouts/Header/constants/menu';
