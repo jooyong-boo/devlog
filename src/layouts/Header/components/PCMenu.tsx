@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Close, Github, Google } from '@/assets/svg/index';
+import Profile from '@/components/Profile';
 import { menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
@@ -12,7 +12,6 @@ const PCMenu = () => {
 
   const { data: session } = useSession();
 
-  console.log(session);
   const { isActive } = useActive();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,7 +35,7 @@ const PCMenu = () => {
           onClick={handleToggleMenu}
         >
           <div
-            className="fixed right-0 h-full w-64 bg-slate-50 p-4 dark:bg-slate-800"
+            className="fixed right-0 h-full w-80 bg-slate-50 p-4 dark:bg-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -47,21 +46,23 @@ const PCMenu = () => {
             </button>
             <div className="mb-4 flex justify-center gap-4 border-b pb-4">
               {session && (
-                <>
-                  <Image
+                <Profile>
+                  <Profile.Info
                     src={session.user?.image || ''}
                     alt={session.user?.name || 'guest'}
-                    width={60}
-                    height={60}
+                    name={session.user?.name || 'guest'}
                   />
-                  <p>{session.user?.name}</p>
-                  <button
-                    className="flex flex-col items-center gap-0.5 fill-slate-900 text-sm dark:fill-slate-50"
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                  >
-                    <p>Sign out</p>
-                  </button>
-                </>
+                  <Profile.Buttons>
+                    <Profile.Button disabled>
+                      <p>Change Profile</p>
+                    </Profile.Button>
+                    <Profile.Button
+                      onClick={() => signOut({ callbackUrl: '/' })}
+                    >
+                      <p>Sign out</p>
+                    </Profile.Button>
+                  </Profile.Buttons>
+                </Profile>
               )}
               {!session && (
                 <>
