@@ -24,6 +24,7 @@
     "@tiptap/react": "^2.6.5",
     "@tiptap/starter-kit": "^2.6.5",
     "clsx": "^2.1.1",
+    "cookies-next": "^4.2.1",
     "dompurify": "^3.1.6",
     "highlight.js": "^11.10.0",
     "jsdom": "^24.1.1",
