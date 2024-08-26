@@ -13,6 +13,10 @@ function MobileMenu() {
     setIsMenuOpen((prev) => !prev);
   };
 
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className="flex sm:hidden">
       <button onClick={handleMenuOpen}>
@@ -26,6 +30,7 @@ function MobileMenu() {
                 key={menu.title}
                 href={menu.href}
                 className={` ${isActive(menu.href) ? 'font-semibold' : ''}`}
+                onClick={() => handleMenuClose()}
               >
                 {menu.title}
               </Link>
