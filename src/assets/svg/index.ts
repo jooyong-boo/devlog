@@ -8,3 +8,4 @@ export { default as LightMode } from './light_mode.svg';
 export { default as Github } from './github.svg';
 export { default as Mail } from './mail.svg';
 export { default as Menu } from './menu.svg';
+export { default as Google } from './google.svg';
