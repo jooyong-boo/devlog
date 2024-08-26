@@ -45,6 +45,7 @@
         "newlines-between": "never"
       }
     ],
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "no-console": "error"
   }
 }

@@ -27,11 +27,9 @@ const authOptions: NextAuthConfig = {
         session.accessToken = token;
       }
 
-      console.log('session', session);
       return session;
     },
     jwt: async ({ token, user }) => {
-      console.log('jwt', token, user);
       return { ...token, ...user };
     },
   },
