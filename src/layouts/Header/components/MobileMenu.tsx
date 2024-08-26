@@ -1,11 +1,18 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Github, Google } from '@/assets/svg/index';
 import { menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
 function MobileMenu() {
+  const pathname = usePathname();
+
   const { isActive } = useActive();
+
+  const { data: session } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -17,6 +24,10 @@ function MobileMenu() {
     setIsMenuOpen(false);
   };
 
+  const handleSignIn = (type: 'github' | 'google') => {
+    signIn(type, { callbackUrl: pathname });
+  };
+
   return (
     <div className="flex sm:hidden">
       <button onClick={handleMenuOpen}>
@@ -25,14 +36,41 @@ function MobileMenu() {
       {isMenuOpen && (
         <div className="absolute left-0 top-14 w-full bg-slate-50 shadow-lg dark:bg-slate-900">
           <div className="mb-4 flex justify-center gap-4 border-b pb-4">
-            <div className="flex flex-col items-center gap-0.5 text-sm">
-              <Github width={40} height={40} />
-              <p>Github</p>
-            </div>
-            <div className="flex flex-col items-center gap-0.5 text-sm">
-              <Google width={40} height={40} />
-              <p>Google</p>
-            </div>
+            {session && (
+              <>
+                <Image
+                  src={session.user?.image || ''}
+                  alt={session.user?.name || 'guest'}
+                  width={60}
+                  height={60}
+                />
+                <p>{session.user?.name}</p>
+                <button
+                  className="flex flex-col items-center gap-0.5 fill-slate-900 text-sm dark:fill-slate-50"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                >
+                  <p>Sign out</p>
+                </button>
+              </>
+            )}
+            {!session && (
+              <>
+                <button
+                  className="flex flex-col items-center gap-0.5 fill-slate-900 text-sm dark:fill-slate-50"
+                  onClick={() => handleSignIn('github')}
+                >
+                  <Github width={40} height={40} />
+                  <p>Github</p>
+                </button>
+                <button
+                  className="flex flex-col items-center gap-0.5 fill-slate-900 text-sm dark:fill-slate-50"
+                  onClick={() => handleSignIn('google')}
+                >
+                  <Google width={40} height={40} />
+                  <p>Google</p>
+                </button>
+              </>
+            )}
           </div>
           <div className="flex flex-col items-center gap-4 py-4">
             {menus.map((menu) => (
