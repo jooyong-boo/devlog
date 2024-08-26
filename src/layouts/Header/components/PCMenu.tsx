@@ -12,10 +12,7 @@ function PCMenu() {
         <Link
           key={menu.title}
           href={menu.href}
-          className={`
-            hover:text-sky-600 dark:hover:text-orange-600
-            ${isActive(menu.href) ? 'font-semibold' : ''}
-            `}
+          className={`hover:text-sky-600 dark:hover:text-orange-600 ${isActive(menu.href) ? 'font-semibold' : ''} `}
         >
           {menu.title}
         </Link>
