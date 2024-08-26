@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { cookies } from 'next/headers';
 import { DefaultToastOptions, Toaster } from 'react-hot-toast';
+import AuthContext from '@/app/context/AuthContext';
+import { getSession } from '@/auth';
 import { Pretendard } from '@/constants/localFont';
 import Footer from '@/layouts/Footer';
 import Header from '@/layouts/Header/index';
@@ -12,11 +14,13 @@ export const metadata: Metadata = {
   description: "jooyong's devlog",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   const theme = cookies().get('theme');
 
   const toasterOptions: DefaultToastOptions = {
@@ -45,10 +49,12 @@ export default function RootLayout({
       <body
         className={`flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 ${Pretendard.className}`}
       >
-        <Toaster position="top-center" toastOptions={toasterOptions} />
-        <Header />
-        <div className="flex flex-grow">{children}</div>
-        <Footer />
+        <AuthContext session={session}>
+          <Toaster position="top-center" toastOptions={toasterOptions} />
+          <Header />
+          <div className="flex flex-grow">{children}</div>
+          <Footer />
+        </AuthContext>
       </body>
     </html>
   );

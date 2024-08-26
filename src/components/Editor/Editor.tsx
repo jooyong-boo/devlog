@@ -14,7 +14,7 @@ import js from 'highlight.js/lib/languages/javascript';
 import josn from 'highlight.js/lib/languages/json';
 import ts from 'highlight.js/lib/languages/typescript';
 import html from 'highlight.js/lib/languages/xml';
-import { createLowlight, all } from 'lowlight';
+import { createLowlight } from 'lowlight';
 import { Markdown } from 'tiptap-markdown';
 import CodeBlock from '@/components/Editor/CodeBlock';
 import Toolbar from '@/components/Editor/Toolbar';

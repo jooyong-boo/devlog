@@ -1,21 +1,17 @@
 import { useEffect, useState } from 'react';
+import { getCookie, setCookie } from 'cookies-next';
 
 const useTheme = () => {
-  const [theme, setTheme] = useState<'dark' | ''>('');
+  const [theme, setTheme] = useState('');
+  const cookieTheme = getCookie('theme');
 
   useEffect(() => {
-    const savedTheme =
-      document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('theme='))
-        ?.split('=')[1] || '';
-    setTheme(savedTheme as 'dark' | '');
-  }, []);
+    setTheme(cookieTheme === 'dark' ? 'dark' : '');
+  }, [cookieTheme]);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? '' : 'dark';
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    document.cookie = `theme=${newTheme}; max-age=${60 * 60 * 24 * 365}; path=/`;
+    const newTheme = cookieTheme === 'dark' ? '' : 'dark';
+    setCookie('theme', newTheme, { maxAge: 60 * 60 * 24 * 365 });
     setTheme(newTheme);
   };
 

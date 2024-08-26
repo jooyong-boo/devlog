@@ -11,7 +11,7 @@ function Footer() {
           target="_blank"
           className="hover:fill-sky-600 dark:fill-slate-50 dark:hover:fill-orange-600"
         >
-          <GithubSvg />
+          <GithubSvg width={24} height={24} />
         </Link>
         <Link
           href="mailto:qnwndyd159@naver.com"
