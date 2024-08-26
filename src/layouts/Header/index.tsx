@@ -12,8 +12,8 @@ function Header() {
         개발블로그
       </Link>
       <div className="flex items-center gap-4">
-        <PCMenu />
         <Darkmode />
+        <PCMenu />
         <MobileMenu />
       </div>
     </div>
