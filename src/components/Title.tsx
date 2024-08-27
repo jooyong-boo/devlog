@@ -1,11 +1,17 @@
 import { cn } from '@/utils/cn';
 
 interface TitleProps extends React.HTMLAttributes<HTMLParagraphElement> {
+  size?: 'small' | 'medium' | 'large';
   subTitle?: string;
   borderBottom?: boolean;
 }
 
-const Title = ({ subTitle, borderBottom = false, ...props }: TitleProps) => {
+const Title = ({
+  subTitle,
+  borderBottom = false,
+  size = 'medium',
+  ...props
+}: TitleProps) => {
   return (
     <header
       className={cn(
@@ -13,7 +19,15 @@ const Title = ({ subTitle, borderBottom = false, ...props }: TitleProps) => {
         borderBottom && `border-b border-slate-400 pb-6`,
       )}
     >
-      <h1 className="text-2xl font-bold" {...props}>
+      <h1
+        className={cn(
+          `font-bold`,
+          size === 'small' && `text-xl`,
+          size === 'medium' && `text-2xl`,
+          size === 'large' && `text-4xl`,
+        )}
+        {...props}
+      >
         {props.children}
       </h1>
       {subTitle && <p className="text-gray-500">{subTitle}</p>}
