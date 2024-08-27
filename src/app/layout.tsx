@@ -47,12 +47,12 @@ export default async function RootLayout({
   return (
     <html lang="en" className={theme?.value === 'dark' ? 'dark' : ''}>
       <body
-        className={`flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 ${Pretendard.className}`}
+        className={`flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 ${Pretendard.className} mx-auto my-0 max-w-[1000px]`}
       >
         <AuthContext session={session}>
           <Toaster position="top-center" toastOptions={toasterOptions} />
           <Header />
-          <div className="flex flex-grow">{children}</div>
+          <div className="flex flex-grow flex-col">{children}</div>
           <Footer />
         </AuthContext>
       </body>
