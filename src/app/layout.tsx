@@ -52,7 +52,7 @@ export default async function RootLayout({
         <AuthContext session={session}>
           <Toaster position="top-center" toastOptions={toasterOptions} />
           <Header />
-          <div className="flex flex-grow flex-col">{children}</div>
+          <main className="flex flex-grow flex-col">{children}</main>
           <Footer />
         </AuthContext>
       </body>
