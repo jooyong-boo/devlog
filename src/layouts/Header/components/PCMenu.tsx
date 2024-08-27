@@ -25,7 +25,7 @@ const PCMenu = () => {
   };
 
   return (
-    <div className="hidden sm:flex">
+    <div className="z-10 hidden sm:flex">
       <button onClick={handleToggleMenu}>
         <Menu className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
       </button>
