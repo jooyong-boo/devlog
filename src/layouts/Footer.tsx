@@ -4,7 +4,7 @@ import MailSvg from '@/assets/svg/mail.svg';
 
 function Footer() {
   return (
-    <div className="mt-4 flex flex-col gap-2 pb-4">
+    <footer className="mt-4 flex flex-col gap-2 pb-4">
       <div className="flex justify-center gap-3">
         <Link
           href="https://github.com/jooyong-boo"
@@ -27,7 +27,7 @@ function Footer() {
         <div> • </div>
         <p>JOOYONG.DEV TECH BLOG</p>
       </div>
-    </div>
+    </footer>
   );
 }
 export default Footer;
