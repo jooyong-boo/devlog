@@ -17,9 +17,12 @@ const CustomLink = ({
   return (
     <Link
       className={cn(
+        'flex items-center gap-0.5',
         `text-sm`,
         isColor &&
           'text-sky-600 hover:text-sky-500 dark:text-orange-600 dark:hover:text-orange-500',
+        isColor &&
+          'fill-sky-600 hover:fill-sky-500 dark:fill-orange-600 dark:hover:fill-orange-500',
         className,
       )}
       {...props}
