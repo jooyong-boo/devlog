@@ -7,7 +7,9 @@ export default function Home() {
   return (
     <main className="init-layout">
       <InnerLayout>
-        <Title borderBottom>최신글</Title>
+        <Title size="large" borderBottom>
+          최신글
+        </Title>
         <ArticleList />
         <div className="flex justify-end">
           <CustomLink href="/posts">
