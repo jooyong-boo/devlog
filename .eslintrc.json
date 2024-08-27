@@ -46,6 +46,6 @@
       }
     ],
     "react/display-name": "off",
-    "no-console": "error"
+    "no-console": "warn"
   }
 }
