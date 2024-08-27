@@ -3,11 +3,12 @@ import { cn } from '@/utils/cn';
 interface InputProps extends React.HTMLAttributes<HTMLInputElement> {
   id: string;
   label?: string;
+  value?: string | number;
 }
 
 function Input({ id, label, ...props }: InputProps) {
   return (
-    <form className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       {label && (
         <label htmlFor={id} className="text-sm font-semibold">
           {label}
@@ -22,7 +23,7 @@ function Input({ id, label, ...props }: InputProps) {
         )}
         {...props}
       />
-    </form>
+    </div>
   );
 }
 

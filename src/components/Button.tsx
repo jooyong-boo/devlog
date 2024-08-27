@@ -10,7 +10,7 @@ type ButtonVariant =
   | 'light';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   outline?: boolean;
   rounded?: boolean;
@@ -48,7 +48,7 @@ function Button({
   return (
     <button
       className={cn(
-        'rounded-md px-3 py-1 transition-all',
+        'rounded-md px-3 py-1 transition-all disabled:bg-slate-400',
         outline
           ? `border hover:text-slate-50 ${outlineStyles[variant]} `
           : `text-slate-50 ${variantStyles[variant]}`,

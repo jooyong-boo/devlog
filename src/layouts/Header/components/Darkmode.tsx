@@ -1,19 +1,23 @@
-import React from 'react';
-import { useStore } from 'zustand';
-import DarkModeSvg from '@/assets/svg/dark_mode.svg';
-import LightModeSvg from '@/assets/svg/light_mode.svg';
-import useThemeStore from '@/store/useThemeStore';
+import { useRouter } from 'next/navigation';
+import { DarkMode, LightMode } from '@/assets/svg/index';
+import useTheme from '@/hooks/useTheme';
 
 function Darkmode() {
-  const { theme, toggleTheme } = useStore(useThemeStore);
+  const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
+
+  const handleToggleTheme = () => {
+    toggleTheme();
+    router.refresh();
+  };
 
   return (
-    <button onClick={toggleTheme}>
+    <button onClick={handleToggleTheme}>
       {theme === 'dark' && (
-        <DarkModeSvg className="w-6 h-6 fill-slate-50 hover:fill-orange-600" />
+        <DarkMode className="h-6 w-6 fill-slate-50 hover:fill-orange-600" />
       )}
       {!theme && (
-        <LightModeSvg className="w-6 h-6 fill-slate-900 hover:fill-sky-600" />
+        <LightMode className="h-6 w-6 fill-slate-900 hover:fill-sky-600" />
       )}
     </button>
   );
