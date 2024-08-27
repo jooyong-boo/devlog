@@ -9,3 +9,5 @@ export { default as Github } from './github.svg';
 export { default as Mail } from './mail.svg';
 export { default as Menu } from './menu.svg';
 export { default as Google } from './google.svg';
+export { default as Preview } from './preview.svg';
+export { default as ArrowRight } from './arrow_right.svg';
