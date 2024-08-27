@@ -15,7 +15,7 @@ const Tags = ({ label, tagList }: TagsProps) => {
   return (
     <div>
       {label && <div className="text-xs dark:text-slate-300">{label}</div>}
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-x-4">
         {tagList.map((tag) => (
           <div key={tag.name} className="flex items-center gap-1">
             <CustomLink href={tag.href}>{tag.name}</CustomLink>
