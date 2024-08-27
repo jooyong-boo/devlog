@@ -29,7 +29,7 @@ function MobileMenu() {
   };
 
   return (
-    <div className="flex sm:hidden">
+    <div className="z-10 flex sm:hidden">
       <button onClick={handleMenuOpen}>
         <Menu className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
       </button>
