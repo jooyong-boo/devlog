@@ -56,6 +56,9 @@ dependencies:
   jsdom:
     specifier: ^24.1.1
     version: 24.1.1
+  lodash-es:
+    specifier: ^4.17.21
+    version: 4.17.21
   lowlight:
     specifier: ^3.1.0
     version: 3.1.0
@@ -80,6 +83,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.5.2
     version: 2.5.2
+  tiptap-extension-resize-image:
+    specifier: ^1.1.8
+    version: 1.1.8(@tiptap/core@2.6.6)(@tiptap/extension-image@2.6.5)(@tiptap/pm@2.6.5)
   tiptap-markdown:
     specifier: ^0.8.10
     version: 0.8.10(@tiptap/core@2.6.6)
@@ -94,6 +100,9 @@ devDependencies:
   '@types/jsdom':
     specifier: ^21.1.7
     version: 21.1.7
+  '@types/lodash-es':
+    specifier: ^4.17.12
+    version: 4.17.12
   '@types/node':
     specifier: ^20
     version: 20.0.0
@@ -2302,6 +2311,16 @@ packages:
   /@types/linkify-it@3.0.5:
     resolution: {integrity: sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==}
     dev: false
+
+  /@types/lodash-es@4.17.12:
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
+    dependencies:
+      '@types/lodash': 4.17.7
+    dev: true
+
+  /@types/lodash@4.17.7:
+    resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
+    dev: true
 
   /@types/markdown-it@13.0.9:
     resolution: {integrity: sha512-1XPwR0+MgXLWfTn9gCsZ55AHOKW1WN+P9vr0PaQh5aerR9LLQXUbjfEAFhjmEmyoYFWAyuN2Mqkn40MZ4ukjBw==}
@@ -4533,6 +4552,10 @@ packages:
       wrap-ansi: 9.0.0
     dev: true
 
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
     dev: false
@@ -5946,6 +5969,18 @@ packages:
     resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
     dependencies:
       '@popperjs/core': 2.11.8
+    dev: false
+
+  /tiptap-extension-resize-image@1.1.8(@tiptap/core@2.6.6)(@tiptap/extension-image@2.6.5)(@tiptap/pm@2.6.5):
+    resolution: {integrity: sha512-dRPCfkCCUPtlVCn7w9HHE01ANJE6pRQMPAYXmsd1Qlk8KUasePdvCQIVJMqKriAqvKYJtnRc3HfojmzZtkQq0w==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/extension-image': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.6.6(@tiptap/pm@2.6.5)
+      '@tiptap/extension-image': 2.6.5(@tiptap/core@2.6.6)
+      '@tiptap/pm': 2.6.5
     dev: false
 
   /tiptap-markdown@0.8.10(@tiptap/core@2.6.6):

@@ -3,6 +3,7 @@ import CustomLink from '@/components/CustomLink';
 import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
+
 export default function Home() {
   return (
     <InnerLayout>

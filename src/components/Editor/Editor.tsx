@@ -15,6 +15,7 @@ import josn from 'highlight.js/lib/languages/json';
 import ts from 'highlight.js/lib/languages/typescript';
 import html from 'highlight.js/lib/languages/xml';
 import { createLowlight } from 'lowlight';
+import ImageResize from 'tiptap-extension-resize-image';
 import { Markdown } from 'tiptap-markdown';
 import CodeBlock from '@/components/Editor/CodeBlock';
 import Toolbar from '@/components/Editor/Toolbar';
@@ -60,6 +61,12 @@ const Editor = ({ onChange, value }: EditorProps) => {
       }),
       Underline,
       Image,
+      ImageResize.configure({
+        inline: true,
+        HTMLAttributes: {
+          class: 'editor-image',
+        },
+      }),
     ],
     content: text,
     onUpdate({ editor }) {
@@ -69,14 +76,12 @@ const Editor = ({ onChange, value }: EditorProps) => {
   });
 
   return (
-    <main className="px-11 py-14">
-      <div className={cn(`codeblock overflow-hidden rounded-sm`)}>
-        {editor && <Toolbar editor={editor} />}
-        <div className="border border-t-0">
-          <EditorContent editor={editor} />
-        </div>
+    <div className={cn(`codeblock overflow-hidden rounded-sm`)}>
+      {editor && <Toolbar editor={editor} />}
+      <div className="border-t-0 bg-slate-200 dark:bg-slate-800">
+        <EditorContent editor={editor} />
       </div>
-    </main>
+    </div>
   );
 };
 
