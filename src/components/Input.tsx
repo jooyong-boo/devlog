@@ -9,7 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ id, label, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         {label && (
           <label htmlFor={id} className="text-sm font-semibold">
             {label}
@@ -18,9 +18,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={cn(
-            `min-h-8 rounded-[4px] px-2 py-1 text-sm focus:outline-none`,
+            `min-h-9 rounded-[4px] px-2 py-1 text-sm focus:outline-none`,
             `bg-slate-50 dark:bg-slate-800`,
-            `border border-slate-300`,
+            `border border-slate-300 dark:border-slate-700`,
             `text-slate-900 placeholder:text-slate-400`,
           )}
           {...props}
