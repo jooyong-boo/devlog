@@ -17,9 +17,9 @@ const TagsList = [
 
 const Article = () => {
   return (
-    <article className="sm:item-start flex flex-col gap-3 px-4 py-8 sm:flex-row sm:gap-10">
+    <article className="sm:item-start flex flex-col gap-3 py-8 sm:flex-row sm:gap-10">
       <Link
-        href="123231"
+        href="/posts/1"
         className="h-full w-full self-center overflow-hidden rounded-lg sm:min-h-[240px] sm:min-w-[240px] sm:max-w-[240px]"
       >
         <div className="relative aspect-[4/2.5] sm:aspect-square">
@@ -33,12 +33,12 @@ const Article = () => {
           />
         </div>
       </Link>
-      <div className="flex flex-col gap-3 px-4 sm:justify-between">
+      <div className="flex flex-col gap-3 sm:justify-between">
         <div className="flex flex-col items-center gap-1 sm:items-start">
           <time dateTime="" className="text-sm text-slate-400">
             {formatDate('2024-08-27', { format: 'full' })}
           </time>
-          <LinkTitle href="123231">
+          <LinkTitle href="/posts/1">
             Release of Tailwind Nextjs Starter Blog v2.0
           </LinkTitle>
           <Tags tagList={TagsList} />
@@ -49,7 +49,7 @@ const Article = () => {
           </p>
         </div>
         <div className="flex justify-between">
-          <CustomLink href="123" className="flex items-center gap-0.5">
+          <CustomLink href="/posts/1" className="flex items-center gap-0.5">
             Read more <ArrowRight width={16} height={16} />
           </CustomLink>
           <div className="flex items-center gap-1 fill-slate-900 text-sm dark:fill-slate-50">
