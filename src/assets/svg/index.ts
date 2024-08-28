@@ -11,3 +11,5 @@ export { default as Menu } from './menu.svg';
 export { default as Google } from './google.svg';
 export { default as Preview } from './preview.svg';
 export { default as ArrowRight } from './arrow_right.svg';
+export { default as Public } from './public.svg';
+export { default as Lock } from './lock.svg';
