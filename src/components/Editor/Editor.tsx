@@ -31,8 +31,8 @@ const lowlight = createLowlight();
 
 lowlight.register('html', html);
 lowlight.register('css', css);
-lowlight.register('js', js);
-lowlight.register('ts', ts);
+lowlight.register('javascript', js);
+lowlight.register('typescript', ts);
 lowlight.register('json', josn);
 
 const Editor = ({ onChange, value }: EditorProps) => {
@@ -74,6 +74,10 @@ const Editor = ({ onChange, value }: EditorProps) => {
       onChange?.(editor.getHTML());
     },
   });
+
+  // TODO: 코드블록 hover시 복사하기 버튼 표시 및 기능 추가
+  // TODO: 코드블록 복사하기 버튼 클릭시 클립보드에 복사
+  // TODO: 코드블록에 파일명 제목으로 보이게 하기
 
   return (
     <div className={cn(`codeblock overflow-hidden rounded-sm`)}>
