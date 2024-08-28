@@ -22,7 +22,7 @@ export interface ToolbarProps {
 
 const Toolbar = ({ editor }: ToolbarProps) => {
   return (
-    <div className="fill-slate-90 flex flex-wrap gap-2 border p-2">
+    <div className="flex flex-wrap gap-2 border fill-slate-900 p-2 dark:fill-slate-50">
       <div className="flex items-center gap-1">
         <button
           onClick={() =>
