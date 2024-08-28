@@ -28,7 +28,7 @@ const ImageUpload = ({ editor }: ToolbarProps) => {
   };
 
   return (
-    <button onClick={handleClickUpload}>
+    <button type="button" onClick={handleClickUpload}>
       <ImageSvg />
       <input
         ref={imageRef}
