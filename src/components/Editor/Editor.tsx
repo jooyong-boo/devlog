@@ -76,14 +76,12 @@ const Editor = ({ onChange, value }: EditorProps) => {
   });
 
   return (
-    <main className="px-11 py-14">
-      <div className={cn(`codeblock overflow-hidden rounded-sm`)}>
-        {editor && <Toolbar editor={editor} />}
-        <div className="border border-t-0">
-          <EditorContent editor={editor} />
-        </div>
+    <div className={cn(`codeblock overflow-hidden rounded-sm`)}>
+      {editor && <Toolbar editor={editor} />}
+      <div className="border-t-0 bg-slate-200 dark:bg-slate-800">
+        <EditorContent editor={editor} />
       </div>
-    </main>
+    </div>
   );
 };
 
