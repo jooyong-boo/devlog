@@ -23,8 +23,8 @@ const Title = ({
         className={cn(
           `font-bold`,
           size === 'small' && `text-xl`,
-          size === 'medium' && `text-2xl`,
-          size === 'large' && `text-4xl`,
+          size === 'medium' && `text-xl md:text-2xl`,
+          size === 'large' && `text-2xl md:text-4xl`,
         )}
         {...props}
       >
