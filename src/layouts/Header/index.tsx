@@ -7,7 +7,7 @@ import PCMenu from '@/layouts/Header/components/PCMenu';
 
 function Header() {
   return (
-    <header className="flex min-h-14 w-full items-center justify-between px-4 py-4">
+    <header className="sticky top-0 z-10 flex min-h-14 w-full items-center justify-between bg-slate-100 px-4 py-4 dark:bg-slate-800">
       <Link href="/" className="text-slate-900 dark:text-slate-50">
         개발블로그
       </Link>
