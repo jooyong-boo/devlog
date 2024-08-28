@@ -34,7 +34,7 @@ function MobileMenu() {
         <Menu className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
       </button>
       {isMenuOpen && (
-        <div className="absolute left-0 top-14 w-full bg-slate-50 shadow-lg dark:bg-slate-900">
+        <div className="absolute left-0 top-14 w-full bg-slate-100 shadow-lg dark:bg-slate-800">
           <div className="mb-4 flex justify-center gap-4 border-b pb-4">
             {session && (
               <Profile>
