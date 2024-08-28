@@ -1,4 +1,5 @@
 import sanitizeHtml from '@/utils/sanitizeHtml';
+import './editor.css';
 
 interface ViewerProps {
   content: string;
