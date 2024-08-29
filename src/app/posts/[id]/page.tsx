@@ -1,6 +1,9 @@
+import Button from '@/components/Button';
 import Viewer from '@/components/Editor/Viewer';
 import Tags from '@/components/Tags';
+import Textarea from '@/components/Textarea';
 import Title from '@/components/Title';
+import CommentList from '@/containers/post/CommentList';
 import LinkedPostCard from '@/containers/post/LinkedPostCard';
 import InnerLayout from '@/layouts/InnerLayout';
 import { formatDate } from '@/utils/convert';
@@ -12,6 +15,27 @@ const TagsList = [
   { name: 'TypeScript', href: '/tags/typescript' },
   { name: 'Server Components', href: '/tags/server-components' },
   { name: 'React Server Components', href: '/tags/react-server-components' },
+];
+
+const CommentLists = [
+  {
+    src: 'https://avatars.githubusercontent.com/u/45431985?v=4',
+    alt: 'imkdw',
+    name: 'imkdw',
+    date: '2024-08-28',
+    description:
+      '먼저 해당 블로그는 Next.js로 클라이언트 사이드가 구성되어있다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를찍을때 문제가 발생했다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다.',
+    replyCount: 2,
+  },
+  {
+    src: 'https://avatars.githubusercontent.com/u/45431985?v=4',
+    alt: 'imkdw',
+    name: 'imkdw',
+    date: '2024-08-28',
+    description:
+      '먼저 해당 블로그는 Next.js로 클라이언트 사이드가 구성되어있다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다. 기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다.',
+    replyCount: 2,
+  },
 ];
 
 const page = () => {
@@ -26,6 +50,7 @@ const page = () => {
         </Title>
         <Tags tagList={TagsList} />
       </div>
+      {/* TODO: 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고) */}
       <Viewer
         content={`
         <h2 id="heading-1">문제상황</h2><p class="paragraph">먼저 해당 블로그는 Next.js로 클라이언트 사이드가 구성되어있다.</p><p class="paragraph">기본적으로 SSR 환경에서 동작하다보니 서버에서 로그를 찍을때 문제가 발생했다.</p><p class="paragraph"></p><p class="paragraph"><img class="editor-image" src="https://static.imkdw.dev/articles/get-browser-info-with-nextjs-ssr-cndwlewg/content-images/f2ae10e5-21d8-4886-b971-502287c6ad57.png" alt="image" style="width: 610px; height: auto; cursor: pointer; margin: 0px auto;" title="image" draggable="true"></p><p class="paragraph"></p><p class="paragraph"></p><h2 id="heading-2">SSR ?</h2><p class="paragraph">SSR은 기본적으로 유저의 요청에 대해서 서버에서 HTML을 다 만들고 내려주는 방식이다.</p><p class="paragraph"></p><p class="paragraph">그러므로 API 호출도 서버사이드에서 진행되기 때문에 기본적으로 userAgent나 IP 정보가 서버의 정보로 남게된다.</p><p class="paragraph"></p><p class="paragraph">Next.js에서는 미들웨어를 통해서 이를 해결할 수 있었다.</p><p class="paragraph"></p><p class="paragraph"></p><p class="paragraph"></p><h2 id="heading-3">Next.js 미들웨어</h2><p class="paragraph">Next.js 14 app router를 기준으로 <a target="_blank" rel="noopener noreferrer nofollow" class="editor-link" href="https://nextjs.org/docs/app/building-your-application/routing/middleware">미들웨어</a>는 app/middleware.ts를 생성하면 자동으로 실행된다.</p><p class="paragraph"></p><p class="paragraph">NextRequest는 클라이언트에서 서버로 들어오는 모든 HTTP 요청에 대한 정보를 가지고있다.</p><pre><code class="language-typescript hljs" data-highlighted="yes"><span class="hljs-keyword">import</span> { <span class="hljs-title class_">NextRequest</span>, <span class="hljs-title class_">NextResponse</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'next/server'</span>;
@@ -91,11 +116,7 @@ server_name imkdw.<span class="hljs-property">dev</span>;
 };</code></pre><p class="paragraph">이렇게 하면 실제 클라이언트의 IP 주소와 userAgent를 가져와서 서버로 넘길 수 있다.</p><p class="paragraph"></p><p class="paragraph"><img class="editor-image" src="https://static.imkdw.dev/articles/get-browser-info-with-nextjs-ssr-cndwlewg/content-images/fb1075de-f975-4496-ab17-1fa3b0a0f0c4.png" alt="image" style="width: 853px; height: auto; cursor: pointer; margin: 0px auto;" title="image" draggable="true"></p>
       `}
       />
-
-      {/* TODO: 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고)*}
-
-      {/* TODO: 이전, 다음 포스트 카드 */}
-      <div className="flex flex-col-reverse justify-center gap-4 md:flex-row">
+      <section className="flex flex-col-reverse justify-center gap-4 md:flex-row">
         <LinkedPostCard
           title="pc는 오른쪽 사이드, 모바일은 제목과 본문 사이"
           href="1"
@@ -105,10 +126,13 @@ server_name imkdw.<span class="hljs-property">dev</span>;
           title="pc는 오른쪽 사이드, 모바일은 제목과 본문 사이"
           href="1"
         />
-      </div>
-      {/* TODO: 댓글 갯수 */}
-      {/* TODO: 댓글 작성 input 및 버튼 */}
-      {/* TODO: 댓글 리스트 */}
+      </section>
+      <section className="flex flex-col gap-3">
+        <Title size="small">2개의 댓글</Title>
+        <Textarea placeholder="댓글을 작성해주세요" />
+        <Button className="self-end">댓글 작성</Button>
+      </section>
+      <CommentList lists={CommentLists} />
     </InnerLayout>
   );
 };
