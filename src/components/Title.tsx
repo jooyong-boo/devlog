@@ -22,7 +22,7 @@ const Title = ({
       <h1
         className={cn(
           `font-bold`,
-          size === 'small' && `text-xl`,
+          size === 'small' && `text-lg`,
           size === 'medium' && `text-xl md:text-2xl`,
           size === 'large' && `text-2xl md:text-4xl`,
         )}
