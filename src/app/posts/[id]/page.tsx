@@ -1,6 +1,7 @@
 import Viewer from '@/components/Editor/Viewer';
 import Tags from '@/components/Tags';
 import Title from '@/components/Title';
+import LinkedPostCard from '@/containers/post/LinkedPostCard';
 import InnerLayout from '@/layouts/InnerLayout';
 import { formatDate } from '@/utils/convert';
 
@@ -94,6 +95,17 @@ server_name imkdw.<span class="hljs-property">dev</span>;
       {/* TODO: 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고)*}
 
       {/* TODO: 이전, 다음 포스트 카드 */}
+      <div className="flex flex-col-reverse justify-center gap-4 md:flex-row">
+        <LinkedPostCard
+          title="pc는 오른쪽 사이드, 모바일은 제목과 본문 사이"
+          href="1"
+        />
+        <LinkedPostCard
+          right
+          title="pc는 오른쪽 사이드, 모바일은 제목과 본문 사이"
+          href="1"
+        />
+      </div>
       {/* TODO: 댓글 갯수 */}
       {/* TODO: 댓글 작성 input 및 버튼 */}
       {/* TODO: 댓글 리스트 */}
