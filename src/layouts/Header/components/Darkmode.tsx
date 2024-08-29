@@ -1,10 +1,12 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 import { DarkMode, LightMode } from '@/assets/svg/index';
-import useTheme from '@/hooks/useTheme';
+import useTheme, { ThemeProps } from '@/hooks/useTheme';
 
-function Darkmode() {
+function Darkmode({ initialTheme }: ThemeProps) {
   const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme({ initialTheme });
 
   const handleToggleTheme = () => {
     toggleTheme();
@@ -12,13 +14,11 @@ function Darkmode() {
   };
 
   return (
-    <button onClick={handleToggleTheme}>
+    <button onClick={handleToggleTheme} className="h-6 w-6">
       {theme === 'dark' && (
-        <DarkMode className="h-6 w-6 fill-slate-50 hover:fill-orange-600" />
+        <DarkMode className="fill-slate-50 hover:fill-orange-600" />
       )}
-      {!theme && (
-        <LightMode className="h-6 w-6 fill-slate-900 hover:fill-sky-600" />
-      )}
+      {!theme && <LightMode className="fill-slate-900 hover:fill-sky-600" />}
     </button>
   );
 }

@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             `min-h-9 rounded-[4px] px-2 py-1 text-sm focus:outline-none`,
             `bg-slate-50 dark:bg-slate-800`,
             `border border-slate-300 dark:border-slate-700`,
-            `text-slate-900 placeholder:text-slate-400`,
+            `text-slate-900 dark:text-slate-50`,
           )}
           {...props}
         />
