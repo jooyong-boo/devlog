@@ -32,7 +32,7 @@ const NavigationCard = ({
         )}
       >
         {subText && <p className="text-xs">{subText}</p>}
-        <h3 className="text-overflow-1">{title}</h3>
+        <h3 className="text-overflow-1 font-semibold">{title}</h3>
       </div>
     </Link>
   );
