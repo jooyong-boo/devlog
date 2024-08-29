@@ -1,18 +1,29 @@
 import Viewer from '@/components/Editor/Viewer';
+import Tags from '@/components/Tags';
 import Title from '@/components/Title';
 import InnerLayout from '@/layouts/InnerLayout';
 import { formatDate } from '@/utils/convert';
 
+const TagsList = [
+  { name: 'React', href: '/tags/react' },
+  { name: 'Next.js', href: '/tags/nextjs' },
+  { name: 'TailwindCSS', href: '/tags/tailwindcss' },
+  { name: 'TypeScript', href: '/tags/typescript' },
+  { name: 'Server Components', href: '/tags/server-components' },
+  { name: 'React Server Components', href: '/tags/react-server-components' },
+];
+
 const page = () => {
   return (
     <InnerLayout>
-      <div className="flex flex-col items-center gap-2 text-center">
+      <div className="flex flex-col gap-2">
         <time dateTime="2024-08-28">
           {formatDate('2024-08-28', { format: 'full' })}
         </time>
         <Title size="large" borderBottom>
           Release of Tailwind Nextjs Starter Blog v2.0
         </Title>
+        <Tags tagList={TagsList} />
       </div>
       <Viewer
         content={`
@@ -80,12 +91,12 @@ server_name imkdw.<span class="hljs-property">dev</span>;
       `}
       />
 
-      {/* 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고)*}
+      {/* TODO: 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고)*}
 
-      {/*TODO: 이전, 다음 포스트 카드 */}
-      {/*TODO: 댓글 갯수 */}
-      {/*TODO: 댓글 작성 input 및 버튼 */}
-      {/*TODO: 댓글 리스트 */}
+      {/* TODO: 이전, 다음 포스트 카드 */}
+      {/* TODO: 댓글 갯수 */}
+      {/* TODO: 댓글 작성 input 및 버튼 */}
+      {/* TODO: 댓글 리스트 */}
     </InnerLayout>
   );
 };
