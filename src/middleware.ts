@@ -7,6 +7,7 @@ const matchersForSignIn = ['/api/auth/*']; // 로그인이 필요한 페이지 �
 
 export async function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
+
   const theme = request.cookies.get('theme');
 
   const requestHeaders = new Headers(request.headers);
@@ -30,7 +31,11 @@ export async function middleware(request: NextRequest) {
   if (isMatch(request.nextUrl.pathname, matchersForSignIn)) {
     return (await getSession())
       ? NextResponse.redirect(new URL('/', request.url))
-      : NextResponse.next();
+      : NextResponse.next({
+          request: {
+            headers: requestHeaders,
+          },
+        });
   }
 
   if (!theme) {
