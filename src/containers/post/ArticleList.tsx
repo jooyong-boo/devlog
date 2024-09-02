@@ -1,13 +1,15 @@
-import Article from '@/containers/post/Article';
+import Article, { ArticleProps } from '@/containers/post/Article';
 
-const ArticleList = () => {
+interface ArticleListProps {
+  articleList: ArticleProps[];
+}
+
+const ArticleList = ({ articleList }: ArticleListProps) => {
   return (
     <div className="divide-y divide-slate-400">
-      <Article />
-      <Article />
-      <Article />
-      <Article />
-      <Article />
+      {articleList.map((article) => (
+        <Article key={article.id} {...article} />
+      ))}
     </div>
   );
 };
