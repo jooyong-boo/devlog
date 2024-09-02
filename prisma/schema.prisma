@@ -73,7 +73,7 @@ model Tags {
   deletedAt  DateTime? @map("deleted_at")
   deleteUser String?   @map("delete_user")
 
-  posts PostTags[]
+  postTag PostTags[]
 }
 
 model Posts {
@@ -96,7 +96,7 @@ model Posts {
 
   users        Users?         @relation(fields: [usersId], references: [id])
   postComments PostComments[]
-  tags         PostTags[]
+  postTag         PostTags[]
   project      Projects       @relation(fields: [projectId], references: [id])
 
   @@index([projectId])
