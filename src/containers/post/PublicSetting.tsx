@@ -7,7 +7,11 @@ import Title from '@/components/Title';
 
 type Active = 'public' | 'private';
 
-const PublicSetting = () => {
+interface PublicSettingProps {
+  name: string;
+}
+
+const PublicSetting = ({ name }: PublicSettingProps) => {
   const [activeButton, setActiveButton] = useState<Active>('public');
 
   const handleActiveButton = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,6 +50,7 @@ const PublicSetting = () => {
           </span>
         </Button>
       </div>
+      <input type="hidden" name={name} value={activeButton} />
     </div>
   );
 };
