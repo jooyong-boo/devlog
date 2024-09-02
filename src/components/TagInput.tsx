@@ -8,9 +8,10 @@ import useToast from '@/hooks/useToast';
 
 interface TagInputProps {
   label?: string;
+  name?: string;
 }
 
-const TagInput = ({ label }: TagInputProps) => {
+const TagInput = ({ label, name }: TagInputProps) => {
   const { enqueueWarningBar } = useToast();
 
   const [inputValue, setInputValue] = useState('');
@@ -62,6 +63,7 @@ const TagInput = ({ label }: TagInputProps) => {
             >
               <CloseSvg width={16} height={16} />
             </button>
+            <input type="hidden" name={name} value={tag} />
           </Label>
         ))}
       </div>

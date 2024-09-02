@@ -25,6 +25,7 @@ import './editor.css';
 interface EditorProps {
   value?: string;
   onChange?: (text: string) => void;
+  name?: string;
 }
 
 const lowlight = createLowlight();
@@ -35,7 +36,7 @@ lowlight.register('javascript', js);
 lowlight.register('typescript', ts);
 lowlight.register('json', josn);
 
-const Editor = ({ onChange, value }: EditorProps) => {
+const Editor = ({ onChange, value, name }: EditorProps) => {
   const [text, setText] = useState(value);
 
   const editor = useEditor({
@@ -84,6 +85,7 @@ const Editor = ({ onChange, value }: EditorProps) => {
       {editor && <Toolbar editor={editor} />}
       <div className="border-t-0 bg-slate-200 dark:bg-slate-800">
         <EditorContent editor={editor} />
+        <input type="hidden" name={name} value={text} />
       </div>
     </div>
   );
