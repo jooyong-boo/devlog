@@ -92,7 +92,7 @@ model Posts {
   deletedAt  DateTime? @map("deleted_at")
   deleteUser String?   @map("delete_user")
 
-  usersId String @map("user_id")
+  usersId String? @map("user_id")
 
   users        Users?         @relation(fields: [usersId], references: [id])
   postComments PostComments[]
