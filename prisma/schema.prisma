@@ -8,39 +8,38 @@ generator client {
 }
 
 model Users {
-  id        String      @id
-  email     String   @unique @db.VarChar(255)
-  nickname  String   @unique @db.VarChar(30)
-  profile   String  
-  oauthId   Int   @map("oauth_id")
-  roleId    Int  @map("role_id")
-  
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  id       String @id
+  email    String @unique @db.VarChar(255)
+  nickname String @unique @db.VarChar(30)
+  profile  String
+  oauthId  Int?    @map("oauth_id")
+  roleId   Int    @map("role_id")
 
-  oauthProvider UsersOAuthProviders @relation(fields: [oauthId], references: [id])
-  role UsersRoles @relation(fields: [roleId], references: [id])
-  posts Posts[]
-  postComments PostComments[]
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
+
+  oauthProvider UsersOAuthProviders? @relation(fields: [oauthId], references: [id])
+  role          UsersRoles          @relation(fields: [roleId], references: [id])
+  posts         Posts[]
+  postComments  PostComments[]
 
   @@index([email, nickname])
 }
 
-
 model UsersOAuthProviders {
-  id        Int      @id @default(autoincrement())
-  name     String   @unique @db.VarChar(255)
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   users Users[]
 
@@ -48,15 +47,15 @@ model UsersOAuthProviders {
 }
 
 model UsersRoles {
-  id        Int      @id @default(autoincrement())
-  name     String  @unique @db.VarChar(20)
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(20)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   users Users[]
 
@@ -64,92 +63,91 @@ model UsersRoles {
 }
 
 model Tags {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(20)
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(20)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   posts PostTags[]
 }
 
 model Posts {
-  id        String   @id @db.VarChar(255)
-  title     String   @db.VarChar(255)
-  content   String   @db.Text
-  thumbnail String   @default("") @db.VarChar(255)
-  published Boolean  @default(true)
-  projectId Int      @map("project_id")
-  viewCount  Int     @default(0) @map("view_cnt")
+  id        String  @id @db.VarChar(255)
+  title     String  @db.VarChar(255)
+  content   String  @db.Text
+  thumbnail String  @default("") @db.VarChar(255)
+  published Boolean @default(true)
+  projectId Int     @map("project_id")
+  viewCount Int     @default(0) @map("view_cnt")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   usersId String @map("user_id")
 
-  users Users? @relation(fields: [usersId], references: [id])
+  users        Users?         @relation(fields: [usersId], references: [id])
   postComments PostComments[]
-  tags PostTags[]
-  project Projects @relation(fields: [projectId], references: [id])
+  tags         PostTags[]
+  project      Projects       @relation(fields: [projectId], references: [id])
 
   @@index([projectId])
 }
 
 model PostsViewTrends {
-  id       Int      @id @default(autoincrement())
-  count    Int
+  id    Int @id @default(autoincrement())
+  count Int
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 }
 
 model PostTags {
   postId String @map("post_id") @db.VarChar(255)
-  tagId   Int    @map("tag_id")
+  tagId  Int    @map("tag_id")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
-
-  @@id([postId, tagId])
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   posts Posts @relation(fields: [postId], references: [id])
-  tags Tags @relation(fields: [tagId], references: [id])
+  tags  Tags  @relation(fields: [tagId], references: [id])
 
+  @@id([postId, tagId])
   @@index([tagId])
 }
 
 model PostComments {
-  id        Int      @id @default(autoincrement())
-  postId    String     @map("post_id")
-  parentId  Int?       @map("parent_id")
-  userId    String     @map("user_id")
-  content   String
+  id       Int    @id @default(autoincrement())
+  postId   String @map("post_id")
+  parentId Int?   @map("parent_id")
+  userId   String @map("user_id")
+  content  String
 
   parent  PostComments?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies PostComments[] @relation("CommentReplies")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   post Posts @relation(fields: [postId], references: [id])
   user Users @relation(fields: [userId], references: [id])
@@ -157,25 +155,19 @@ model PostComments {
   @@index([postId])
 }
 
-
-
-
 model Projects {
-  id        Int      @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   name  String  @unique @db.VarChar(20)
   image String? @db.VarChar(255)
   desc  String  @db.VarChar(255)
   sort  Int
 
-  createdAt DateTime @default(now()) @map("created_at")
-  createUser String  @default("_system") @map("create_user")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  updateUser String  @default("_system") @map("update_user")
-  deletedAt DateTime? @map("deleted_at")
-  deleteUser String? @map("delete_user")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  createUser String    @default("_system") @map("create_user")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  updateUser String    @default("_system") @map("update_user")
+  deletedAt  DateTime? @map("deleted_at")
+  deleteUser String?   @map("delete_user")
 
   posts Posts[]
 }
-
-
-
