@@ -7,7 +7,6 @@ export async function GET(
 ) {
   try {
     const { id } = params;
-
     // id로 글 조회
     const postDetail = await prisma.posts.findUnique({
       where: {
@@ -49,15 +48,23 @@ export async function GET(
 
     const formattedTags = postDetail?.postTag.map((tag) => tag.tags);
 
-    const res = {
-      postDetail: {
-        ...postDetail,
-        tags: formattedTags,
-        comments,
+    const response = NextResponse.json(
+      {
+        postDetail: {
+          ...postDetail,
+          tags: formattedTags,
+          comments,
+        },
       },
-    };
+      { status: 200 },
+    );
 
-    return NextResponse.json(res, { status: 200 });
+    await prisma.posts.update({
+      where: { id },
+      data: { viewCount: { increment: 1 } },
+    });
+
+    return response;
   } catch (e) {
     return NextResponse.json(
       { message: '글 목록 조회 중 오류가 발생했습니다.' },
