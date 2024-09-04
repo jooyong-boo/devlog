@@ -2,21 +2,11 @@ import Pagination from '@/components/Pagination';
 import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
+import { getPosts } from '@/services/posts';
 
 const page = async () => {
-  const getPosts = async () => {
-    const res = await fetch(`${process.env.URL}/api/posts`, {
-      method: 'GET',
-    });
-    const data = await res.json();
-    return data;
-  };
+  const posts = await getPosts({});
 
-  const posts = await getPosts();
-
-  if (!posts) {
-    return <div>Loading...</div>;
-  }
   return (
     <InnerLayout>
       <Title size="large" borderBottom>

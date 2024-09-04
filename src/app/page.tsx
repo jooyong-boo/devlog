@@ -3,14 +3,21 @@ import CustomLink from '@/components/CustomLink';
 import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
+import { getPosts } from '@/services/posts';
 
-export default function Home() {
+const Home = async () => {
+  const posts = await getPosts({});
+
+  if (!posts) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <InnerLayout>
       <Title size="large" borderBottom>
         최신글
       </Title>
-      <ArticleList />
+      <ArticleList articleList={posts} />
       <div className="flex justify-end">
         <CustomLink href="/posts">
           모든 글 보기
@@ -19,4 +26,6 @@ export default function Home() {
       </div>
     </InnerLayout>
   );
-}
+};
+
+export default Home;
