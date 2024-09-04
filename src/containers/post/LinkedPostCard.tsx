@@ -13,7 +13,7 @@ const LinkedPostCard = ({
   right = false,
 }: LinkedPostCardProps) => {
   return (
-    <div className="group">
+    <div className="group md:min-w-80 md:max-w-80">
       <NavigationCard
         href={href}
         icon={
