@@ -9,7 +9,7 @@ interface ProfileProps {
 }
 
 interface ProfileInfoProps {
-  src: string;
+  src?: string;
   alt: string;
   name: string;
   date?: string;
@@ -42,7 +42,7 @@ Profile.Info = ({ src, alt, name, date }: ProfileInfoProps) => {
   return (
     <div className="flex items-center gap-4">
       <Image
-        src={src}
+        src={src || 'https://placehold.co/60x60'}
         alt={alt}
         width={60}
         height={60}

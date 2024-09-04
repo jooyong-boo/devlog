@@ -4,20 +4,8 @@ import { Preview, ArrowRight } from '@/assets/svg/index';
 import CustomLink from '@/components/CustomLink';
 import LinkTitle from '@/components/LinkTitle';
 import Tags from '@/components/Tags';
+import { FormattedPost } from '@/types/post.prisma';
 import { formatDate } from '@/utils/convert';
-
-export interface ArticleProps {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  postTag: {
-    id: string;
-    name: string;
-  }[];
-  thumbnail: string;
-  viewCount: number;
-}
 
 const Article = ({
   id,
@@ -27,7 +15,7 @@ const Article = ({
   thumbnail,
   title,
   viewCount,
-}: ArticleProps) => {
+}: FormattedPost) => {
   return (
     <article className="sm:item-start flex flex-col gap-3 py-8 sm:flex-row sm:gap-10">
       <Link

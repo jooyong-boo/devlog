@@ -8,3 +8,11 @@ export const userRoles = {
     name: 'admin',
   },
 } as const;
+
+export interface User {
+  id: string;
+  nickname: string;
+  email: string;
+  role: (typeof userRoles)[keyof typeof userRoles];
+  profile?: string;
+}

@@ -14,3 +14,4 @@ export { default as ArrowRight } from './arrow_right.svg';
 export { default as ArrowLeft } from './arrow_left.svg';
 export { default as Public } from './public.svg';
 export { default as Lock } from './lock.svg';
+export { default as Folder } from './folder.svg';

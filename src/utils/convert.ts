@@ -15,7 +15,7 @@ interface DateFormatOptions {
 }
 
 export function formatDate(
-  dateString?: string,
+  dateString?: string | Date,
   options: DateFormatOptions = {},
 ): string {
   if (!dateString) return '';
