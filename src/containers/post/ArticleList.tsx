@@ -1,7 +1,8 @@
-import Article, { ArticleProps } from '@/containers/post/Article';
+import Article from '@/containers/post/Article';
+import { FormattedPost } from '@/types/post.prisma';
 
 interface ArticleListProps {
-  articleList: ArticleProps[];
+  articleList: FormattedPost[];
 }
 
 const ArticleList = ({ articleList }: ArticleListProps) => {
