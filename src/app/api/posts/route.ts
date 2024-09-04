@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CreatePost } from '@/types/post';
+import { CreatePostRequest, CreatePostResponse } from '@/types/post';
+import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
@@ -7,26 +8,7 @@ export async function GET(req: NextRequest) {
     const cursor = req.nextUrl.searchParams.get('cursor');
 
     const postLists = await prisma.posts.findMany({
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-        postTag: {
-          select: {
-            tags: true,
-            postId: true,
-            tagId: true,
-          },
-        },
-        thumbnail: true,
-        viewCount: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 5,
+      ...postQueryOptions,
       skip: cursor ? 1 : 0,
       ...(cursor && { cursor: { id: cursor } }),
     });
@@ -38,9 +20,14 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    const res = formattedTags;
+    const response: NextResponse<FormattedPost[]> = NextResponse.json(
+      formattedTags,
+      {
+        status: 200,
+      },
+    );
 
-    return NextResponse.json(res, { status: 200 });
+    return response;
   } catch (e) {
     return NextResponse.json(
       { message: '글 목록 조회 중 오류가 발생했습니다.' },
@@ -52,8 +39,14 @@ export async function GET(req: NextRequest) {
 // 글 작성
 export async function POST(req: NextRequest) {
   try {
-    const { title, content, tags, thumbnail, published, url }: CreatePost =
-      await req.json();
+    const {
+      title,
+      content,
+      tags,
+      thumbnail,
+      published,
+      url,
+    }: CreatePostRequest = await req.json();
 
     // 필수 필드 확인
     if (!title || !content || !tags || !url) {
@@ -78,21 +71,28 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    tags.forEach(async (tag) => {
-      const newTag = await prisma.tags.create({
-        data: {
-          name: tag,
-        },
-      });
-      await prisma.postTags.create({
-        data: {
-          tagId: newTag.id,
-          postId: newPost.id,
-        },
-      });
-    });
+    await Promise.all(
+      tags.map(async (tag) => {
+        const newTag = await prisma.tags.upsert({
+          where: { name: tag },
+          update: {},
+          create: { name: tag },
+        });
+        await prisma.postTags.create({
+          data: {
+            tagId: newTag.id,
+            postId: newPost.id,
+          },
+        });
+      }),
+    );
 
-    return NextResponse.json({ id: url }, { status: 200 });
+    const response: NextResponse<CreatePostResponse> = NextResponse.json(
+      { id: url },
+      { status: 200 },
+    );
+
+    return response;
   } catch (e) {
     return NextResponse.json(
       { message: '글 작성 중 오류가 발생했습니다.' },

@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { commentQueryOptions } from '@/types/comment.prisma';
+import {
+  FormattedPostDetail,
+  postDetailQueryOptions,
+} from '@/types/postDetail.prisma';
 import prisma from '../../../../../prisma/client';
 
 export async function GET(
@@ -9,53 +14,33 @@ export async function GET(
     const { id } = params;
     // id로 글 조회
     const postDetail = await prisma.posts.findUnique({
-      where: {
-        id: String(id),
-      },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-        postTag: {
-          select: {
-            tags: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
-        thumbnail: true,
-        viewCount: true,
-      },
+      where: { id },
+      ...postDetailQueryOptions,
     });
+
+    if (!postDetail) {
+      return NextResponse.json(
+        { message: '해당 글이 존재하지 않습니다.' },
+        { status: 404 },
+      );
+    }
+
     // id에 맞는 댓글 조회
     const comments = await prisma.postComments.findMany({
       where: {
         postId: id,
       },
-      select: {
-        id: true,
-        content: true,
-        createdAt: true,
-        updatedAt: true,
-        userId: true,
-      },
+      ...commentQueryOptions,
     });
 
-    const formattedTags = postDetail?.postTag.map((tag) => tag.tags);
+    const formattedTags = {
+      ...postDetail,
+      postTag: postDetail.postTag.map((tag) => tag.tags),
+      comments,
+    };
 
-    const response = NextResponse.json(
-      {
-        postDetail: {
-          ...postDetail,
-          tags: formattedTags,
-          comments,
-        },
-      },
+    const response: NextResponse<FormattedPostDetail> = NextResponse.json(
+      formattedTags,
       { status: 200 },
     );
 
