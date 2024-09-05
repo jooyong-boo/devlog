@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { DefaultToastOptions, Toaster } from 'react-hot-toast';
 import AuthContext from '@/app/context/AuthContext';
 import { getSession } from '@/auth';
 import { Pretendard } from '@/constants/localFont';
-import Footer from '@/layouts/Footer';
-import Header from '@/layouts/Header/index';
 import { tailwindTheme } from '@/utils/tailwindTheme';
 
 export const metadata: Metadata = {
@@ -19,10 +17,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headerList = headers();
-  const pathname = headerList.get('x-current-path') || '/';
-  const showHeaderFooter = shouldShowHeaderFooter(pathname);
-
   const session = await getSession();
 
   const theme = cookies().get('theme');
@@ -55,22 +49,9 @@ export default async function RootLayout({
       >
         <AuthContext session={session}>
           <Toaster position="top-center" toastOptions={toasterOptions} />
-          {showHeaderFooter && <Header />}
           <main className="flex flex-grow flex-col">{children}</main>
-          {showHeaderFooter && <Footer />}
         </AuthContext>
       </body>
     </html>
   );
 }
-
-{
-  /* TODO: 리팩토링 필요 layout.ts에 여러가지 로직이 들어가 있음 */
-}
-const layoutConfig = {
-  hideHeaderFooterPaths: ['/posts/write'],
-};
-
-const shouldShowHeaderFooter = (pathname: string) => {
-  return !layoutConfig.hideHeaderFooterPaths.includes(pathname);
-};
