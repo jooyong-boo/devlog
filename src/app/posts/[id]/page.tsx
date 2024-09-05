@@ -3,6 +3,7 @@ import Viewer from '@/components/Editor/Viewer';
 import Tags from '@/components/Tags';
 import Textarea from '@/components/Textarea';
 import Title from '@/components/Title';
+import CommentInput from '@/containers/post/CommentInput';
 import CommentList from '@/containers/post/CommentList';
 import LinkedPostCard from '@/containers/post/LinkedPostCard';
 import LinkedProjectCard from '@/containers/post/LinkedProjectCard';
@@ -53,8 +54,7 @@ const page = async ({ params }: { params: { id: string } }) => {
       </section>
       <section className="flex flex-col gap-3">
         <Title size="small">{postDetail.comments.length}개의 댓글</Title>
-        <Textarea placeholder="댓글을 작성해주세요" />
-        <Button className="self-end">댓글 작성</Button>
+        <CommentInput />
       </section>
       <CommentList lists={postDetail.comments} />
     </InnerLayout>

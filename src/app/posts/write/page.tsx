@@ -47,7 +47,7 @@ const Page = () => {
         },
         body: JSON.stringify(body),
       }).then((res) => res.json());
-      router.push(`/posts/${result.id}`);
+      router.replace(`/posts/${result.id}`);
     } catch (e) {
       enqueueWarningBar('게시글 작성에 실패 했습니다.', 'error');
     }

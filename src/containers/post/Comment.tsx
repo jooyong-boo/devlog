@@ -11,7 +11,7 @@ const Comment = ({ content, createdAt, user }: CommentType) => {
           src={user.profile}
           alt={user.nickname}
           name={user.nickname}
-          date={formatDate(createdAt, { includeYear: true })}
+          date={formatDate(createdAt, { includeYear: true, includeTime: true })}
         />
       </Profile>
       <p>{content}</p>

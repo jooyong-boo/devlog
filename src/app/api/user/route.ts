@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: '이미 가입된 이메일입니다.' },
+      { message: '로그인이 완료되었습니다.' },
       { status: 201 },
     );
   } catch (e) {
