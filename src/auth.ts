@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
@@ -20,24 +21,20 @@ const authOptions: NextAuthConfig = {
   },
   callbacks: {
     signIn: async ({ account, user, email }) => {
-      const result = await fetch('http://localhost:3000/api/user', {
+      await fetch('http://localhost:3000/api/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: user.email || email,
-          id: user.id,
+          id: nanoid(),
           nickname: user.name,
           profile: user.image,
           accessToken: account,
         }),
       });
-
-      if (result.status === 201) {
-        return true;
-      }
-      return false;
+      return true;
     },
     jwt: async ({ token, account, profile, user }) => {
       if (account) {
