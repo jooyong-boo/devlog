@@ -52,7 +52,7 @@ Profile.Info = ({ src, alt, name, date }: ProfileInfoProps) => {
         <p className="text-sm font-semibold md:text-lg">{name}</p>
         {date && (
           <time className="text-xs text-slate-500 dark:text-slate-300 md:text-base">
-            {formatDate(date, { includeYear: true })}
+            {date}
           </time>
         )}
       </div>
