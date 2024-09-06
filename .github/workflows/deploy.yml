@@ -8,6 +8,13 @@ env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: devlog
   IMAGE_TAG: ${{ github.sha }}
+  URL: ${{ secrets.URL }}
+  OAUTH_GITHUB_ID: ${{ secrets.OAUTH_GITHUB_ID }}
+  OAUTH_GITHUB_SECRET: ${{ secrets.OAUTH_GITHUB_SECRET }}
+  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   deploy:
@@ -51,9 +58,17 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build \
+             --build-arg URL=${{ secrets.URL }} \
+             --build-arg OAUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }} \
+             --build-arg OAUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }} \
+             --build-arg GOOGLE_ID=${{ secrets.GOOGLE_ID }} \
+             --build-arg GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} \
+             --build-arg AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
+             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
       - name: Get GitHub Actions IP ranges
         id: ip_ranges
         run: |
