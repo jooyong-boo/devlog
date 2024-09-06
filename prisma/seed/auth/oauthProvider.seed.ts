@@ -1,7 +1,12 @@
-import { UsersOAuthProviders } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { oAuthProviders } from '../../../src/types/auth';
 
-const oAuthProviderSeed: Pick<UsersOAuthProviders, 'id' | 'name'>[] = [
+const prisma = new PrismaClient();
+
+const oAuthProviderSeed: Pick<
+  Parameters<typeof prisma.usersOAuthProviders.create>[0]['data'],
+  'id' | 'name'
+>[] = [
   {
     id: oAuthProviders.google.id,
     name: oAuthProviders.google.provider,
