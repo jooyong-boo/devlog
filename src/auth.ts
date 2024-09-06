@@ -6,8 +6,8 @@ import Google from 'next-auth/providers/google';
 const authOptions: NextAuthConfig = {
   providers: [
     Github({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
+      clientId: process.env.OAUTH_GITHUB_ID!,
+      clientSecret: process.env.OAUTH_GITHUB_SECRET!,
     }),
     Google({
       clientId: process.env.GOOGLE_ID!,
