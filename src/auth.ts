@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
+import { postUsers } from '@/services/users';
 
 const authOptions: NextAuthConfig = {
   providers: [
@@ -20,19 +21,16 @@ const authOptions: NextAuthConfig = {
     maxAge: 60 * 60 * 24 * 30,
   },
   callbacks: {
-    signIn: async ({ account, user, email }) => {
-      await fetch('http://localhost:3000/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email || email,
-          id: nanoid(),
-          nickname: user.name,
-          profile: user.image,
-          accessToken: account,
-        }),
+    signIn: async ({ account, user }) => {
+      if (!user.name || !user.image || !account) {
+        return false;
+      }
+      postUsers({
+        email: user.email as string,
+        id: nanoid(),
+        nickname: user.name,
+        profile: user.image,
+        accessToken: account,
       });
       return true;
     },
