@@ -7,7 +7,7 @@ interface InnerLayoutProps {
 
 const InnerLayout = ({ children, className }: InnerLayoutProps) => {
   return (
-    <section className={cn(`relative flex flex-col`, className)}>
+    <section className={cn(`init-layout relative`, className)}>
       {children}
     </section>
   );

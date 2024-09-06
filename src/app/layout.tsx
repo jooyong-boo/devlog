@@ -5,8 +5,6 @@ import { DefaultToastOptions, Toaster } from 'react-hot-toast';
 import AuthContext from '@/app/context/AuthContext';
 import { getSession } from '@/auth';
 import { Pretendard } from '@/constants/localFont';
-import Footer from '@/layouts/Footer';
-import Header from '@/layouts/Header/index';
 import { tailwindTheme } from '@/utils/tailwindTheme';
 
 export const metadata: Metadata = {
@@ -51,9 +49,7 @@ export default async function RootLayout({
       >
         <AuthContext session={session}>
           <Toaster position="top-center" toastOptions={toasterOptions} />
-          <Header />
-          <div className="flex flex-grow flex-col">{children}</div>
-          <Footer />
+          <main className="flex flex-grow flex-col">{children}</main>
         </AuthContext>
       </body>
     </html>

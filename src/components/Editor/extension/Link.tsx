@@ -22,6 +22,7 @@ const Link = ({ editor }: ToolbarProps) => {
 
   return (
     <button
+      type="button"
       onClick={setLink}
       className={editor.isActive('link') ? 'is-active' : ''}
     >

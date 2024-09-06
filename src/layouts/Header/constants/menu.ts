@@ -1,5 +1,3 @@
-import { title } from 'process';
-
 export const menus = [
   { title: 'Home', href: '/' },
   { title: 'Posts', href: '/posts' },

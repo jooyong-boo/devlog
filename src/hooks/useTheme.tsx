@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react';
-import { getCookie, setCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
+import { setCookie } from 'cookies-next';
 
-const useTheme = () => {
-  const [theme, setTheme] = useState('');
-  const cookieTheme = getCookie('theme');
+export type Theme = 'dark' | '';
+
+export interface ThemeProps {
+  initialTheme: Theme;
+}
+
+const useTheme = ({ initialTheme }: ThemeProps) => {
+  const router = useRouter();
+
+  const [theme, setTheme] = useState(initialTheme);
 
   useEffect(() => {
-    setTheme(cookieTheme === 'dark' ? 'dark' : '');
-  }, [cookieTheme]);
+    setTheme(initialTheme === 'dark' ? 'dark' : '');
+  }, [initialTheme]);
 
   const toggleTheme = () => {
-    const newTheme = cookieTheme === 'dark' ? '' : 'dark';
+    const newTheme = initialTheme === 'dark' ? '' : 'dark';
     setCookie('theme', newTheme, { maxAge: 60 * 60 * 24 * 365 });
     setTheme(newTheme);
+    router.refresh();
   };
 
   return { theme, toggleTheme };

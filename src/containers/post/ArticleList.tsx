@@ -1,13 +1,16 @@
 import Article from '@/containers/post/Article';
+import { FormattedPost } from '@/types/post.prisma';
 
-const ArticleList = () => {
+interface ArticleListProps {
+  articleList: FormattedPost[];
+}
+
+const ArticleList = ({ articleList }: ArticleListProps) => {
   return (
     <div className="divide-y divide-slate-400">
-      <Article />
-      <Article />
-      <Article />
-      <Article />
-      <Article />
+      {articleList.map((article) => (
+        <Article key={article.id} {...article} />
+      ))}
     </div>
   );
 };

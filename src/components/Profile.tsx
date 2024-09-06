@@ -1,14 +1,18 @@
 import Image from 'next/image';
 import Button from '@/components/Button';
+import { cn } from '@/utils/cn';
+import { formatDate } from '@/utils/convert';
 
 interface ProfileProps {
   children: React.ReactNode;
+  border?: boolean;
 }
 
 interface ProfileInfoProps {
-  src: string;
+  src?: string;
   alt: string;
   name: string;
+  date?: string;
 }
 
 interface ProfileButtonsProps {
@@ -20,25 +24,38 @@ interface ProfileButtonProps
   children: React.ReactNode;
 }
 
-const Profile = (props: ProfileProps) => {
+const Profile = ({ border = true, ...props }: ProfileProps) => {
   return (
-    <div className="flex flex-col gap-2 rounded-md border border-slate-200 p-3">
+    <div
+      className={cn(
+        `flex flex-col gap-2`,
+        border &&
+          `rounded-md border border-slate-200 p-3 dark:border-slate-700`,
+      )}
+    >
       {props.children}
     </div>
   );
 };
 
-Profile.Info = ({ src, alt, name }: ProfileInfoProps) => {
+Profile.Info = ({ src, alt, name, date }: ProfileInfoProps) => {
   return (
     <div className="flex items-center gap-4">
       <Image
-        src={src}
+        src={src || 'https://placehold.co/60x60'}
         alt={alt}
         width={60}
         height={60}
-        className="rounded-full"
+        className="h-10 w-10 rounded-full md:h-14 md:w-14"
       />
-      <p className="text-lg font-semibold">{name}</p>
+      <div className="flex-col justify-center">
+        <p className="text-sm font-semibold md:text-lg">{name}</p>
+        {date && (
+          <time className="text-xs text-slate-500 dark:text-slate-300 md:text-base">
+            {date}
+          </time>
+        )}
+      </div>
     </div>
   );
 };

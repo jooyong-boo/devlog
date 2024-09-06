@@ -6,7 +6,12 @@ import Input from '@/components/Input';
 import Label from '@/components/Label';
 import useToast from '@/hooks/useToast';
 
-const TagInput = () => {
+interface TagInputProps {
+  label?: string;
+  name?: string;
+}
+
+const TagInput = ({ label, name }: TagInputProps) => {
   const { enqueueWarningBar } = useToast();
 
   const [inputValue, setInputValue] = useState('');
@@ -41,8 +46,8 @@ const TagInput = () => {
     <div className="flex flex-col gap-1">
       <Input
         id="tags"
-        placeholder="태그 입력"
-        label="태그"
+        placeholder="태그를 입력하세요"
+        label={label}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         value={inputValue}
@@ -58,6 +63,7 @@ const TagInput = () => {
             >
               <CloseSvg width={16} height={16} />
             </button>
+            <input type="hidden" name={name} value={tag} />
           </Label>
         ))}
       </div>
