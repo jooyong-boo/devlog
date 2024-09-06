@@ -59,14 +59,14 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           docker build \
-             --build-arg URL=${{ secrets.URL }} \
-             --build-arg OAUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }} \
-             --build-arg OAUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }} \
-             --build-arg GOOGLE_ID=${{ secrets.GOOGLE_ID }} \
-             --build-arg GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} \
-             --build-arg AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
-             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
-             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+              --build-arg URL="${{ secrets.URL }}" \
+              --build-arg OAUTH_GITHUB_ID="${{ secrets.OAUTH_GITHUB_ID }}" \
+              --build-arg OAUTH_GITHUB_SECRET="${{ secrets.OAUTH_GITHUB_SECRET }}" \
+              --build-arg GOOGLE_ID="${{ secrets.GOOGLE_ID }}" \
+              --build-arg GOOGLE_SECRET="${{ secrets.GOOGLE_SECRET }}" \
+              --build-arg AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
+              --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
            echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
       - name: Get GitHub Actions IP ranges
