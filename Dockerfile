@@ -42,12 +42,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 COPY prisma ./prisma
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm i -g prisma
 
-RUN npx prisma generate
+RUN npx prisma generate --schema ./prisma/schema.prisma
+
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
@@ -59,11 +57,6 @@ RUN \
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
-
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
 
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
