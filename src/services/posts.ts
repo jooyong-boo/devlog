@@ -11,7 +11,11 @@ interface GetPostsRequest {
 export const getPosts = async ({
   cursor,
 }: GetPostsRequest): Promise<FormattedPost[]> =>
-  getData('/api/posts', {}, { cursor });
+  getData('/api/posts', {
+    params: {
+      cursor,
+    },
+  });
 
 export const getPostDetail = async (id: string): Promise<FormattedPostDetail> =>
   getData<FormattedPostDetail>(`/api/posts/${id}`);
