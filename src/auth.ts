@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import NextAuth, { NextAuthConfig } from 'next-auth';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
-import { postUsers } from '@/services/users';
+import prisma from '../prisma/client';
 
 const authOptions: NextAuthConfig = {
   providers: [
@@ -16,6 +16,7 @@ const authOptions: NextAuthConfig = {
     }),
   ],
   secret: process.env.AUTH_SECRET,
+  trustHost: true,
   session: {
     strategy: 'jwt',
     maxAge: 60 * 60 * 24 * 30,
@@ -25,13 +26,21 @@ const authOptions: NextAuthConfig = {
       if (!user.name || !user.image || !account) {
         return false;
       }
-      postUsers({
-        email: user.email as string,
-        id: nanoid(),
-        nickname: user.name,
-        profile: user.image,
-        accessToken: account,
+      const checkUsers = await prisma.users.findUnique({
+        where: { email: user.email as string },
       });
+      if (!checkUsers) {
+        await prisma.users.create({
+          data: {
+            email: user.email as string,
+            id: nanoid(),
+            nickname: user.name,
+            profile: user.image,
+            roleId: 1,
+          },
+        });
+      }
+
       return true;
     },
     jwt: async ({ token, account, profile, user }) => {
