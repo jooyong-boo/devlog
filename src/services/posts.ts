@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { getData, postData } from '@/services/customAxios';
 import { PostDetailNavigationResponse } from '@/types/post';
 import { FormattedPost } from '@/types/post.prisma';
@@ -31,5 +30,4 @@ export const postComment = async ({
 }: {
   id: string;
   content: string;
-}): Promise<AxiosResponse> =>
-  postData(`/api/posts/${id}/comments`, { content });
+}) => postData(`/api/posts/${id}/comments`, { content });
