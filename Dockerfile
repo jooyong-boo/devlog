@@ -34,7 +34,6 @@ COPY . .
 RUN pnpm install
 
 RUN npx prisma generate
-RUN npx prisma migrate deploy
 
 RUN pnpm run build
 
