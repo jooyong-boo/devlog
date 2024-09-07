@@ -102,7 +102,18 @@ jobs:
           sudo docker pull ${{ steps.build-image.outputs.image }}
           sudo docker stop devlog || true
           sudo docker rm devlog || true
-          sudo docker run -d --name devlog -p 3000:3000 ${{ steps.build-image.outputs.image }}
+
+          # Prisma 마이그레이션 실행
+          sudo docker run --rm \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            ${{ steps.build-image.outputs.image }} \
+            npx prisma migrate deploy
+
+          # 애플리케이션 실행
+          sudo docker run -d --name devlog -p 3000:3000 \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            ${{ steps.build-image.outputs.image }}
+
 
           # Nginx 설정이 올바른지 확인
           sudo nginx -t
