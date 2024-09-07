@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
+    "start:migrate": "prisma migrate deploy && next start",
     "format": "prettier --cache --write .",
     "lint": "next lint --fix --max-warnings=0",
     "prepare": "husky install",

@@ -103,22 +103,7 @@ jobs:
           sudo docker stop devlog || true
           sudo docker rm devlog || true
 
-          # 기존 마이그레이션 컨테이너 중지 (존재한다면)
-          sudo docker stop devlog-migration || true
-
-          # Prisma 마이그레이션 실행 (컨테이너 유지)
-          sudo docker run -d --name devlog-migration ${{ steps.build-image.outputs.image }} npx prisma migrate deploy
-
-          # 마이그레이션 완료 대기
-          sudo docker wait devlog-migration
-
-          # 마이그레이션 결과 확인
-          if [ $(sudo docker inspect -f '{{.State.ExitCode}}' devlog-migration) -ne 0 ]; then
-            echo "Migration failed. Check the migration logs."
-            exit 1
-          fi
-
-          # 애플ㄹ리케이션 컨테이너 실행
+          # 애플리케이션 컨테이너 실행
           sudo docker run -d --name devlog -p 3000:3000 ${{ steps.build-image.outputs.image }}
 
           # Nginx 설정이 올바른지 확인
