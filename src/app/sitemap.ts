@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const domain = process.env.NEXT_PUBLIC_URL;
+const domain = process.env.URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
