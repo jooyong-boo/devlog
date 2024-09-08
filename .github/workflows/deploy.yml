@@ -103,7 +103,7 @@ jobs:
           sudo aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
           # 시스템 정리
-          sudo docker system prune -af
+          sudo docker system prune -af --volumes
           sudo apt-get autoremove --purge -y
 
           sudo docker pull ${{ steps.build-image.outputs.image }}
