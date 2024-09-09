@@ -1,32 +1,26 @@
-import server from './index';
-
-type RequestConfig = RequestInit & {
-  params?: Record<string, string | number | boolean | undefined>;
-};
-
-const appendQueryString = (
-  url: string,
-  params?: Record<string, string | number | boolean | undefined>,
-) => {
-  if (!params) return url;
-  const searchParams = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined) {
-      searchParams.append(key, String(value));
-    }
-  });
-  return `${url}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
-};
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import server from '@/services/index';
 
 export const getData = async <T>(
   url: string,
-  config?: RequestConfig,
-): Promise<T> => {
+  config?: AxiosRequestConfig,
+  queryString?: { [key: string]: string | number | boolean | undefined },
+) => {
   try {
-    const fullUrl = appendQueryString(url, config?.params);
-    const response = await server.get(fullUrl, config);
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
+    const searchParams = new URLSearchParams();
+    if (queryString) {
+      Object.entries(queryString).forEach(([key, value]) => {
+        if (value !== undefined) {
+          searchParams.append(key, String(value));
+        }
+      });
+    }
+    const fullUrl = `${url}${
+      searchParams.toString() ? `?${searchParams.toString()}` : ''
+    }`;
+
+    const response: AxiosResponse<T> = await server.get<T>(fullUrl, config);
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -35,12 +29,11 @@ export const getData = async <T>(
 export const postData = async <T>(
   url: string,
   data?: unknown,
-  config?: RequestConfig,
-): Promise<T> => {
+  config?: AxiosRequestConfig,
+) => {
   try {
-    const response = await server.post(url, data, config);
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
+    const response = await server.post<T>(url, data, config);
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -49,12 +42,11 @@ export const postData = async <T>(
 export const putData = async <T>(
   url: string,
   data?: unknown,
-  config?: RequestConfig,
+  config?: AxiosRequestConfig,
 ): Promise<T> => {
   try {
-    const response = await server.put(url, data, config);
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
+    const response: AxiosResponse<T> = await server.put<T>(url, data, config);
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -63,12 +55,11 @@ export const putData = async <T>(
 export const patchData = async <T>(
   url: string,
   data?: unknown,
-  config?: RequestConfig,
-): Promise<T> => {
+  config?: AxiosRequestConfig,
+) => {
   try {
-    const response = await server.patch(url, data, config);
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
+    const response: AxiosResponse<T> = await server.patch<T>(url, data, config);
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -76,12 +67,11 @@ export const patchData = async <T>(
 
 export const deleteData = async <T>(
   url: string,
-  config?: RequestConfig,
-): Promise<T> => {
+  config?: AxiosRequestConfig,
+) => {
   try {
-    const response = await server.delete(url, config);
-    if (!response.ok) throw new Error('Network response was not ok');
-    return response.json();
+    const response: AxiosResponse<T> = await server.delete<T>(url, config);
+    return response.data;
   } catch (error) {
     throw error;
   }
