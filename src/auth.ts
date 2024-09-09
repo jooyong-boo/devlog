@@ -22,10 +22,7 @@ const authOptions: NextAuthConfig = {
     maxAge: 60 * 60 * 24 * 30,
   },
   callbacks: {
-    signIn: async ({ account, user }) => {
-      if (!user.name || !user.image || !account) {
-        return false;
-      }
+    signIn: async ({ user }) => {
       const checkUsers = await prisma.users.findUnique({
         where: { email: user.email as string },
       });
@@ -34,8 +31,8 @@ const authOptions: NextAuthConfig = {
           data: {
             email: user.email as string,
             id: nanoid(),
-            nickname: user.name,
-            profile: user.image,
+            nickname: user.name as string,
+            profile: user.image as string,
             roleId: 1,
           },
         });
