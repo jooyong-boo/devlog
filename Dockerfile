@@ -1,7 +1,5 @@
-# 빌드 스테이지
 FROM node:18-alpine AS base
-
-# 환경 변수 설정
+# 빌드 시 필요한 인자들
 ARG URL
 ARG OAUTH_GITHUB_ID
 ARG OAUTH_GITHUB_SECRET
@@ -10,7 +8,7 @@ ARG GOOGLE_SECRET
 ARG AUTH_SECRET
 ARG AUTH_URL
 ARG DATABASE_URL
-
+# 환경 변수 설정
 ENV URL=$URL
 ENV OAUTH_GITHUB_ID=$OAUTH_GITHUB_ID
 ENV OAUTH_GITHUB_SECRET=$OAUTH_GITHUB_SECRET
@@ -20,40 +18,55 @@ ENV AUTH_SECRET=$AUTH_SECRET
 ENV AUTH_URL=$AUTH_URL
 ENV DATABASE_URL=$DATABASE_URL
 
-
 FROM base AS deps
-
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-RUN npm install -g pnpm
-
 COPY package.json pnpm-lock.yaml* ./
-COPY prisma ./prisma
-COPY . .
+RUN npm install -g pnpm
+RUN pnpm i --frozen-lockfile
 
-RUN pnpm install
+
 
 FROM base AS builder
 WORKDIR /app
-
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/prisma ./prisma
+COPY prisma ./prisma
 COPY . .
 
+ENV NODE_ENV=production
+
+RUN npm install -g pnpm
 RUN npx prisma generate
 
-RUN npm run build
+RUN pnpm run build
 
-
-# 프로덕션 스테이지
-FROM base AS production
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-# 빌드된 애플리케이션 복사
-COPY --from=builder /app/.next ./.next
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./package.json
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+COPY --chown=nextjs:nodejs prisma ./prisma/        
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
 
-CMD ["pnpm", "start:migrate"]
+ENV PORT=3000
+
+COPY --chown=nextjs:nodejs start.sh .
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]
