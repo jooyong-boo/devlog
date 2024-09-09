@@ -2,7 +2,7 @@
 
 # Run prisma migrations
 npx prisma migrate deploy
-npx prisma db seed
+npm run db:seed
 
 # Start the server
 node server.js
