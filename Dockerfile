@@ -38,6 +38,7 @@ ENV NODE_ENV=production
 
 RUN npm install -g pnpm
 RUN npx prisma generate
+RUN npx prisma db seed
 
 RUN pnpm run build
 
