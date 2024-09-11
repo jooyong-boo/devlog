@@ -40,23 +40,39 @@ const authOptions: NextAuthConfig = {
 
       return true;
     },
-    jwt: async ({ token, account, profile, user }) => {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.id = profile?.id || user.id;
+    jwt: async ({ token, session, trigger }) => {
+      const user = await prisma.users.findUnique({
+        where: { email: token.email as string },
+        select: {
+          createdAt: true,
+          nickname: true,
+          oauthProvider: {
+            select: {
+              name: true,
+            },
+          },
+          role: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+      if (user) {
+        Object.assign(token, user);
+      }
+      if (trigger === 'update' && session) {
+        Object.assign(token, session.user);
+        token.picture = session.user.image;
       }
       return token;
     },
-    session: async ({ session, token, user }) => {
-      if (token) {
-        session.user.id = (token.id as string) || user.id;
-      }
-
+    session: async ({ session, token }) => {
+      session = { ...session, ...token };
       return session;
     },
   },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
-
 export { auth as getSession };
