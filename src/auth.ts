@@ -1,8 +1,30 @@
 import { nanoid } from 'nanoid';
 import NextAuth, { NextAuthConfig } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import prisma from '../prisma/client';
+
+declare module 'next-auth' {
+  export interface User {
+    accessToken: string | JWT;
+  }
+  export interface Session {
+    accessToken: string | JWT;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken: string;
+    role: {
+      name: string;
+    };
+    oauthProvider: {
+      name: string;
+    };
+  }
+}
 
 const authOptions: NextAuthConfig = {
   providers: [
