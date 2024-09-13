@@ -6,13 +6,15 @@ import prisma from '../../prisma/client';
 
 interface GetPostsRequest {
   cursor?: string;
+  count?: number;
 }
 
-export const getPosts = async ({ cursor }: GetPostsRequest) => {
+export const getPosts = async ({ cursor, count = 5 }: GetPostsRequest) => {
   try {
     const postLists = await prisma.posts.findMany({
       ...postQueryOptions,
       skip: cursor ? 1 : 0,
+      take: count,
       ...(cursor && { cursor: { id: cursor } }),
     });
 

@@ -6,10 +6,12 @@ import prisma from '../../../../prisma/client';
 export async function GET(req: NextRequest) {
   try {
     const cursor = req.nextUrl.searchParams.get('cursor');
+    const count = req.nextUrl.searchParams.get('count');
 
     const postLists = await prisma.posts.findMany({
       ...postQueryOptions,
       skip: cursor ? 1 : 0,
+      take: Number(count),
       ...(cursor && { cursor: { id: cursor } }),
     });
 
@@ -46,10 +48,11 @@ export async function POST(req: NextRequest) {
       thumbnail,
       published,
       url,
+      projectId,
     }: CreatePostRequest = await req.json();
 
     // 필수 필드 확인
-    if (!title || !content || !tags || !url) {
+    if (!title || !content || !tags || !url || !projectId) {
       return NextResponse.json(
         { message: '필수 필드가 누락되었습니다.' },
         { status: 400 },
@@ -65,7 +68,7 @@ export async function POST(req: NextRequest) {
         thumbnail,
         project: {
           connect: {
-            id: 1,
+            id: projectId,
           },
         },
       },
