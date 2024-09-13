@@ -63,7 +63,7 @@ function Button({
       type="button"
       {...props}
       className={cn(
-        'flex items-center rounded-md px-3 py-1 transition-all disabled:bg-slate-400',
+        'flex items-center justify-center rounded-md px-3 py-1 transition-all disabled:bg-slate-400',
         outline
           ? `border hover:text-slate-50 ${outlineStyles[variant]} ${active && activeOutlineStyles[variant]} `
           : `text-slate-50 ${variantStyles[variant]}`,

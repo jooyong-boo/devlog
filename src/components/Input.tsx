@@ -23,6 +23,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             `border border-slate-300 dark:border-slate-700`,
             `text-slate-900 dark:text-slate-50`,
           )}
+          autoComplete="off"
           {...props}
         />
       </div>

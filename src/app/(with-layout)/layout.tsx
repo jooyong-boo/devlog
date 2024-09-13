@@ -5,7 +5,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Header />
-      {children}
+      <div className="flex flex-grow flex-col">{children}</div>
       <Footer />
     </>
   );

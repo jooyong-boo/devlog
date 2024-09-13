@@ -24,7 +24,6 @@ export const postQueryOptions = {
   orderBy: {
     createdAt: 'desc' as const,
   },
-  take: 5,
 } as const;
 
 export type PostQueryOptions = typeof postQueryOptions;

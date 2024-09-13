@@ -36,7 +36,7 @@ lowlight.register('javascript', js);
 lowlight.register('typescript', ts);
 lowlight.register('json', josn);
 
-const Editor = ({ onChange, value, name }: EditorProps) => {
+const Editor = ({ onChange, value = '', name }: EditorProps) => {
   const [text, setText] = useState(value);
 
   const editor = useEditor({

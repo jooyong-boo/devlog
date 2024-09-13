@@ -5,7 +5,7 @@ import InnerLayout from '@/layouts/InnerLayout';
 import { getPosts } from '@/services/posts';
 
 const page = async () => {
-  const posts = await getPosts({});
+  const posts = await getPosts({ count: 10 });
 
   return (
     <InnerLayout>
