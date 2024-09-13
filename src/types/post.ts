@@ -8,6 +8,7 @@ export interface CreatePostRequest {
   thumbnail: string;
   published: boolean;
   url: string;
+  projectId: number;
 }
 
 export interface CreatePostResponse {

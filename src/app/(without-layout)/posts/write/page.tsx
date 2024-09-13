@@ -6,15 +6,21 @@ import Editor from '@/components/Editor/Editor';
 import ImageInput from '@/components/ImageInput';
 import Input from '@/components/Input';
 import TagInput from '@/components/TagInput';
-import PublicSetting from '@/containers/post/PublicSetting';
+import PostSetting from '@/containers/post/write/PostSetting';
 import useToast from '@/hooks/useToast';
 import InnerLayout from '@/layouts/InnerLayout';
+import { createPost } from '@/services/posts';
+import { CreatePostRequest } from '@/types/post';
 
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const { enqueueWarningBar } = useToast();
+
+  const goBack = () => {
+    router.back();
+  };
 
   if (searchParams.get('id')) {
     return <div>수정 페이지</div>;
@@ -29,27 +35,27 @@ const Page = () => {
     const thumbnail = formData.get('thumbnail') as File;
     const published = formData.get('published') as string;
     const url = formData.get('url') as string;
+    const projectId = formData.get('projectId') as string;
 
-    const body = {
+    const body: CreatePostRequest = {
       title,
       content,
       tags,
       thumbnail: thumbnail.name,
       published: published === 'public',
       url,
+      projectId: Number(projectId),
     };
 
     try {
-      const result = await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      }).then((res) => res.json());
+      const result = await createPost({
+        ...body,
+      });
       router.replace(`/posts/${result.id}`);
     } catch (e) {
-      enqueueWarningBar('게시글 작성에 실패 했습니다.', 'error');
+      if (e instanceof Error) {
+        enqueueWarningBar(e.message, 'error');
+      }
     }
   };
 
@@ -58,24 +64,16 @@ const Page = () => {
       <InnerLayout className="gap-3">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-x-4 gap-y-2">
           <ImageInput name="thumbnail" label="썸네일 업로드" />
-          <div className="flex h-full w-full flex-col justify-center gap-4">
-            <PublicSetting name="published" />
-            <Input
-              placeholder="URL을 입력하세요"
-              id="url"
-              label="URL 설정"
-              name="url"
-            />
-          </div>
+          <PostSetting />
         </div>
         <Input placeholder="제목을 입력하세요" id="title" name="title" />
         <Editor name="content" />
         <TagInput name="tags" />
         <div className="flex items-center justify-end gap-2">
-          <Button size="lg" variant="light">
+          <Button size="md" variant="light" onClick={goBack}>
             취소
           </Button>
-          <Button size="lg" type="submit">
+          <Button size="md" type="submit">
             게시하기
           </Button>
         </div>
