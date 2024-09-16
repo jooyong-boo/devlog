@@ -5,7 +5,7 @@ export interface CreatePostRequest {
   title: string;
   content: string;
   tags: string[];
-  thumbnail: string;
+  thumbnail: File;
   published: boolean;
   url: string;
   projectId: number;

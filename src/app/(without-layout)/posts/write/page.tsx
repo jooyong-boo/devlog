@@ -41,7 +41,7 @@ const Page = () => {
       title,
       content,
       tags,
-      thumbnail: thumbnail.name,
+      thumbnail,
       published: published === 'public',
       url,
       projectId: Number(projectId),

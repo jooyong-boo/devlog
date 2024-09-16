@@ -40,7 +40,10 @@ const Article = ({
           </time>
           <LinkTitle href={`/posts/${id}`}>{title}</LinkTitle>
           <Tags tagList={postTag} />
-          <p className="text-overflow-3">{content}</p>
+          <div
+            className="text-overflow-3"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </div>
         <div className="flex justify-between">
           <CustomLink

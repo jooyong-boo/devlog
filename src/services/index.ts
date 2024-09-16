@@ -9,6 +9,10 @@ const server: Axios = axios.create({
 });
 
 server.interceptors.request.use((config) => {
+  // 요청이 multipart/form-data일 때만 Content-Type을 설정
+  if (config.data instanceof FormData) {
+    config.headers.set('Content-Type', 'multipart/form-data');
+  }
   return config;
 });
 
