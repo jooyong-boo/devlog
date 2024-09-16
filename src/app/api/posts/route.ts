@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { postImages } from '@/services/images';
 import { CreatePostRequest, CreatePostResponse } from '@/types/post';
 import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
 import prisma from '../../../../prisma/client';
@@ -41,15 +42,15 @@ export async function GET(req: NextRequest) {
 // 글 작성
 export async function POST(req: NextRequest) {
   try {
-    const {
-      title,
-      content,
-      tags,
-      thumbnail,
-      published,
-      url,
-      projectId,
-    }: CreatePostRequest = await req.json();
+    const formData = await req.formData();
+
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const tags = formData.getAll('tags') as string[];
+    const thumbnail = formData.get('thumbnail') as File;
+    const published = (formData.get('published') as string) === 'true';
+    const url = formData.get('url') as string;
+    const projectId = Number(formData.get('projectId') as string);
 
     // 필수 필드 확인
     if (!title || !content || !tags || !url || !projectId) {
@@ -59,13 +60,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // thumbnail 업로드
+    const thumbnailUrl = await postImages({
+      file: thumbnail,
+      folder: `posts/${url}`,
+    });
+
     const newPost = await prisma.posts.create({
       data: {
         id: url,
         title,
         content,
         published,
-        thumbnail,
+        thumbnail: thumbnailUrl.imageUrl,
         project: {
           connect: {
             id: projectId,

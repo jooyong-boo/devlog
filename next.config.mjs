@@ -24,6 +24,9 @@ const nextConfig = {
       {
         hostname: 'placehold.co',
       },
+      {
+        hostname: 'devlog-local.s3.ap-northeast-2.amazonaws.com',
+      },
     ],
   },
 };
