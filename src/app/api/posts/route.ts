@@ -66,6 +66,15 @@ export async function POST(req: NextRequest) {
       folder: `posts/${url}`,
     });
 
+    // 현재 게시물의 내용에서 이미지 URL 추출
+    const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;
+    const usedImages = content.match(imageUrlRegex) || [];
+
+    // 이미지 URL 중 thumbnail URL 제외
+    const filteredImages = usedImages.filter(
+      (image) => image !== thumbnailUrl.imageUrl,
+    );
+
     const newPost = await prisma.posts.create({
       data: {
         id: url,
