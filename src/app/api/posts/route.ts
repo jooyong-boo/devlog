@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { postImages } from '@/services/images';
-import { CreatePostRequest, CreatePostResponse } from '@/types/post';
+import { CreatePostResponse } from '@/types/post';
 import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
@@ -75,11 +76,13 @@ export async function POST(req: NextRequest) {
       (image) => image !== thumbnailUrl.imageUrl,
     );
 
+    const updatedContent = await moveImages(url, content, filteredImages);
+
     const newPost = await prisma.posts.create({
       data: {
         id: url,
         title,
-        content,
+        content: updatedContent,
         published,
         thumbnail: thumbnailUrl.imageUrl,
         project: {
@@ -89,6 +92,8 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    await cleanupTempImages();
 
     await Promise.all(
       tags.map(async (tag) => {
