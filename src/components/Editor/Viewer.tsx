@@ -1,4 +1,4 @@
-import sanitizeHtml from '@/utils/sanitizeHtml';
+import { sanitizeHtml } from '@/utils/html';
 import './editor.css';
 
 interface ViewerProps {
