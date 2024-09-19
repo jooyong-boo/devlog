@@ -40,15 +40,23 @@ export const createPost = async ({
   url,
   projectId,
 }: CreatePostRequest): Promise<FormattedPost> => {
-  return await postData('/api/posts', {
-    title,
-    content,
-    tags,
-    thumbnail,
-    published,
-    url,
-    projectId,
+  const formData = new FormData();
+
+  // updatedThumbnail을 File 객체로 변환
+  const updatedThumbnail = new File([thumbnail], 'thumbnail', {
+    type: thumbnail.type,
+    lastModified: thumbnail.lastModified,
   });
+
+  formData.append('title', title);
+  formData.append('content', content);
+  tags.forEach((tag) => formData.append('tags', tag));
+  formData.append('thumbnail', updatedThumbnail);
+  formData.append('published', published ? 'public' : 'private');
+  formData.append('url', url);
+  formData.append('projectId', projectId.toString());
+
+  return await postData('/api/posts', formData);
 };
 
 export const getPostDetail = async (id: string): Promise<FormattedPostDetail> =>

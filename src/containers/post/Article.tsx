@@ -6,6 +6,7 @@ import LinkTitle from '@/components/LinkTitle';
 import Tags from '@/components/Tags';
 import { FormattedPost } from '@/types/post.prisma';
 import { formatDate } from '@/utils/convert';
+import { extractTextFromHtml } from '@/utils/html';
 
 const Article = ({
   id,
@@ -40,7 +41,7 @@ const Article = ({
           </time>
           <LinkTitle href={`/posts/${id}`}>{title}</LinkTitle>
           <Tags tagList={postTag} />
-          <p className="text-overflow-3">{content}</p>
+          <div className="text-overflow-3">{extractTextFromHtml(content)}</div>
         </div>
         <div className="flex justify-between">
           <CustomLink

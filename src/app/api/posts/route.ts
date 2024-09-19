@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CreatePostRequest, CreatePostResponse } from '@/types/post';
+import { postImages } from '@/services/images';
+import { CreatePostResponse } from '@/types/post';
 import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
@@ -41,15 +43,15 @@ export async function GET(req: NextRequest) {
 // 글 작성
 export async function POST(req: NextRequest) {
   try {
-    const {
-      title,
-      content,
-      tags,
-      thumbnail,
-      published,
-      url,
-      projectId,
-    }: CreatePostRequest = await req.json();
+    const formData = await req.formData();
+
+    const title = formData.get('title') as string;
+    const content = formData.get('content') as string;
+    const tags = formData.getAll('tags') as string[];
+    const thumbnail = formData.get('thumbnail') as File;
+    const published = (formData.get('published') as string) === 'true';
+    const url = formData.get('url') as string;
+    const projectId = Number(formData.get('projectId') as string);
 
     // 필수 필드 확인
     if (!title || !content || !tags || !url || !projectId) {
@@ -59,13 +61,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // thumbnail 업로드
+    const thumbnailUrl = await postImages({
+      file: thumbnail,
+      folder: `posts/${url}`,
+    });
+
+    // 현재 게시물의 내용에서 이미지 URL 추출
+    const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;
+    const usedImages = content.match(imageUrlRegex) || [];
+
+    const updatedContent = await moveImages(url, content, usedImages);
+
     const newPost = await prisma.posts.create({
       data: {
         id: url,
         title,
-        content,
+        content: updatedContent,
         published,
-        thumbnail,
+        thumbnail: thumbnailUrl.imageUrl,
         project: {
           connect: {
             id: projectId,
@@ -73,6 +87,8 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    await cleanupTempImages();
 
     await Promise.all(
       tags.map(async (tag) => {
