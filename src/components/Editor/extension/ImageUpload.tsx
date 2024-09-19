@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { ImageSvg } from '@/assets/svg/editor/index';
 import { ToolbarProps } from '@/components/Editor/Toolbar';
+import { postImages } from '@/services/images';
 
 const ImageUpload = ({ editor }: ToolbarProps) => {
   const imageRef = useRef<HTMLInputElement>(null);
@@ -14,11 +15,9 @@ const ImageUpload = ({ editor }: ToolbarProps) => {
       return;
     }
 
-    const imageUrl = URL.createObjectURL(file);
-    editor.chain().focus().setImage({ src: imageUrl }).run();
+    const result = await postImages({ file, folder: 'posts/temporary' });
 
-    const fileExt = file.name.split('.').pop();
-    const fullFilename = `${fileExt}`;
+    editor.chain().focus().setImage({ src: result.imageUrl }).run();
   };
 
   const handleClickUpload = () => {

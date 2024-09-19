@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { postImages } from '@/services/images';
-import { CreatePostRequest, CreatePostResponse } from '@/types/post';
+import { CreatePostResponse } from '@/types/post';
 import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
@@ -66,11 +67,22 @@ export async function POST(req: NextRequest) {
       folder: `posts/${url}`,
     });
 
+    // 현재 게시물의 내용에서 이미지 URL 추출
+    const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;
+    const usedImages = content.match(imageUrlRegex) || [];
+
+    // 이미지 URL 중 thumbnail URL 제외
+    const filteredImages = usedImages.filter(
+      (image) => image !== thumbnailUrl.imageUrl,
+    );
+
+    const updatedContent = await moveImages(url, content, filteredImages);
+
     const newPost = await prisma.posts.create({
       data: {
         id: url,
         title,
-        content,
+        content: updatedContent,
         published,
         thumbnail: thumbnailUrl.imageUrl,
         project: {
@@ -80,6 +92,8 @@ export async function POST(req: NextRequest) {
         },
       },
     });
+
+    await cleanupTempImages();
 
     await Promise.all(
       tags.map(async (tag) => {

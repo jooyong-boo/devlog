@@ -1,21 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  DeleteObjectCommand,
-  GetObjectCommand,
-  PutObjectCommand,
-  PutObjectCommandInput,
-  S3Client,
-} from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-
-const Bucket = process.env.AWS_S3_BUCKET!;
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
-  },
-});
+import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
+import { nanoid } from 'nanoid';
+import { Bucket, s3 } from '@/utils/s3';
 
 // // 이미지 불러오기
 // export async function GET(req: Request, res: Response) {
@@ -47,16 +33,16 @@ export async function POST(req: NextRequest, res: NextRequest) {
         { status: 400 },
       );
     }
-
     const buffer = await file.arrayBuffer();
-    const fileName = `${Date.now()}-${file.name}`;
-    const fullPath = `${folder.replace(/^\/+|\/+$/g, '')}/${fileName}`.replace(
-      /^\/+/,
-      '',
-    );
+
+    // 파일 확장자 추출
+    const fileExtension = file.name.split('.').pop();
+    // 새 파일명 생성 (timestamp-nanoid.확장자)
+    const newFileName = `${Date.now()}-${nanoid()}.${fileExtension}`;
+    const fullPath = `${folder.replace(/^\/+|\/+$/g, '')}/${newFileName}`;
 
     const params: PutObjectCommandInput = {
-      Bucket,
+      Bucket: Bucket,
       Key: fullPath,
       Body: Buffer.from(buffer),
       ContentType: file.type,
