@@ -36,9 +36,11 @@ export async function POST(req: NextRequest, res: NextRequest) {
     const buffer = await file.arrayBuffer();
 
     // 파일 확장자 추출
-    const fileExtension = file.name.split('.').pop();
+    const fileExtension = file.type.split('/').pop();
+
     // 새 파일명 생성 (timestamp-nanoid.확장자)
     const newFileName = `${Date.now()}-${nanoid()}.${fileExtension}`;
+
     const fullPath = `${folder.replace(/^\/+|\/+$/g, '')}/${newFileName}`;
 
     const params: PutObjectCommandInput = {
