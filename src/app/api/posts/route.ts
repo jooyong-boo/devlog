@@ -71,12 +71,7 @@ export async function POST(req: NextRequest) {
     const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;
     const usedImages = content.match(imageUrlRegex) || [];
 
-    // 이미지 URL 중 thumbnail URL 제외
-    const filteredImages = usedImages.filter(
-      (image) => image !== thumbnailUrl.imageUrl,
-    );
-
-    const updatedContent = await moveImages(url, content, filteredImages);
+    const updatedContent = await moveImages(url, content, usedImages);
 
     const newPost = await prisma.posts.create({
       data: {
