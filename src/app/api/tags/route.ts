@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { TagsResult } from '@/types/tags.prisma';
+import { tagsQueryOptions, TagsResult } from '@/types/tags.prisma';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
-    const tagList = await prisma.tags.findMany({
-      select: {
-        id: true,
-        name: true,
-        postTag: true,
-      },
+    const tagList = await prisma.tags.findMany(tagsQueryOptions);
+
+    const tags: TagsResult[] = tagList.map((tag) => {
+      return {
+        id: tag.id,
+        name: tag.name,
+        count: tag.postTag.length,
+      };
     });
 
-    const response: NextResponse<TagsResult[]> = NextResponse.json(tagList, {
+    const response: NextResponse<TagsResult[]> = NextResponse.json(tags, {
       status: 200,
     });
     return response;

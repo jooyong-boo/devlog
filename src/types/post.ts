@@ -1,4 +1,4 @@
-import { Tag } from '@/types/tag';
+import { TagsResult } from '@/types/tags.prisma';
 import { User } from '@/types/user';
 
 export interface CreatePostRequest {
@@ -23,7 +23,7 @@ export interface PostDetail {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  tags: Tag[];
+  tags: TagsResult[];
   thumbnail: string;
   viewCount: number;
 }
