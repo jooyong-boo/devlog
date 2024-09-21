@@ -61,6 +61,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 이미 존재하는 id인지 확인
+    const existingPost = await prisma.posts.findUnique({
+      where: { id: url },
+    });
+
+    if (existingPost) {
+      return NextResponse.json(
+        { message: '이미 존재하는 글입니다.' },
+        { status: 400 },
+      );
+    }
+
     // thumbnail 업로드
     const thumbnailUrl = await postImages({
       file: thumbnail,
