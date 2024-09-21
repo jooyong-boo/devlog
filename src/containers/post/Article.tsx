@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Preview, ArrowRight } from '@/assets/svg/index';
 import CustomLink from '@/components/CustomLink';
+import FullWidthImage from '@/components/Image/FullWidthImage';
 import LinkTitle from '@/components/LinkTitle';
 import Tags from '@/components/Tags';
 import { FormattedPost } from '@/types/post.prisma';
@@ -23,16 +24,7 @@ const Article = ({
         href={`/posts/${id}`}
         className="h-full w-full self-center overflow-hidden rounded-lg sm:min-h-[240px] sm:min-w-[240px] sm:max-w-[240px]"
       >
-        <div className="relative aspect-[4/2.5] sm:aspect-square">
-          <Image
-            src={thumbnail || 'https://placehold.co/600x400'}
-            alt={title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
+        <FullWidthImage image={thumbnail} name={title} aspectRatio="4/2.5" />
       </Link>
       <div className="flex flex-col gap-3 sm:flex-grow sm:justify-between">
         <div className="flex flex-col items-center gap-1 sm:items-start">

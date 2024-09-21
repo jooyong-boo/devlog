@@ -1,27 +1,29 @@
+import Link from 'next/link';
 import CustomLink from '@/components/CustomLink';
-import { Tag } from '@/types/tag';
+import { TagsResult } from '@/types/tags.prisma';
 
 interface TagsProps {
-  label?: string;
-  tagList: Tag[];
+  tagList: TagsResult[];
 }
 
-const Tags = ({ label, tagList }: TagsProps) => {
+const Tags = ({ tagList }: TagsProps) => {
   return (
-    <div>
-      {label && <div className="text-xs dark:text-slate-300">{label}</div>}
-      <div className="flex flex-wrap gap-x-4">
-        {tagList.map((tag) => (
-          <div key={tag.id} className="flex items-center gap-1">
-            <CustomLink href={`/tags/${tag.name}`}>{tag.name}</CustomLink>
-            {tag.count && (
-              <CustomLink href={tag.name} isColor={false} className="text-xs">
-                ({tag.count})
-              </CustomLink>
-            )}
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      {tagList.map((tag) => (
+        <div key={tag.id} className="flex items-center gap-1">
+          <CustomLink className="text-sm" href={`/tags/${tag.name}`}>
+            {tag.name}
+          </CustomLink>
+          {tag.postTag && (
+            <Link
+              href={`/tags/${tag.name}`}
+              className="text-sm text-slate-500 dark:text-slate-300"
+            >
+              ({tag.postTag.length})
+            </Link>
+          )}
+        </div>
+      ))}
     </div>
   );
 };
