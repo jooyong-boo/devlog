@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Preview, ArrowRight } from '@/assets/svg/index';
 import CustomLink from '@/components/CustomLink';

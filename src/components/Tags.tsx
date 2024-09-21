@@ -14,12 +14,12 @@ const Tags = ({ tagList }: TagsProps) => {
           <CustomLink className="text-sm" href={`/tags/${tag.name}`}>
             {tag.name}
           </CustomLink>
-          {tag.postTag && (
+          {tag.count !== undefined && (
             <Link
               href={`/tags/${tag.name}`}
               className="text-sm text-slate-500 dark:text-slate-300"
             >
-              ({tag.postTag.length})
+              ({tag.count})
             </Link>
           )}
         </div>
