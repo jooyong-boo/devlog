@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Tag } from '@/types/tag';
+import { TagsResult } from '@/types/tags.prisma';
 
 export const postQueryOptions = {
   select: {
@@ -33,5 +33,5 @@ export type PostResult = Prisma.PostsGetPayload<{
 }>;
 
 export type FormattedPost = Omit<PostResult, 'postTag'> & {
-  postTag: Tag[];
+  postTag: TagsResult[];
 };

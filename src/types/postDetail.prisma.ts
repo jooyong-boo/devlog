@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Comment } from '@/types/post';
-import { Tag } from '@/types/tag';
+import { TagsResult } from '@/types/tags.prisma';
 
 export const postDetailQueryOptions = {
   select: {
@@ -45,6 +45,6 @@ export type PostDetailResult = Prisma.PostsGetPayload<{
 }>;
 
 export type FormattedPostDetail = Omit<PostDetailResult, 'postTag'> & {
-  postTag: Tag[];
+  postTag: TagsResult[];
   comments: Comment[];
 };
