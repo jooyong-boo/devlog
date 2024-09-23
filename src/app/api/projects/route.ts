@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { CreateProjectRequest } from '@/types/project';
-import { ProjectResult } from '@/types/project.prisma';
+import { projectQueryOptions, ProjectResult } from '@/types/project.prisma';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
-    const projectList = await prisma.projects.findMany();
+    const projectList = await prisma.projects.findMany({
+      ...projectQueryOptions,
+    });
 
     const response: NextResponse<ProjectResult[]> = NextResponse.json(
       projectList,
@@ -57,7 +59,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const projectList = await prisma.projects.findMany();
+    const projectList = await prisma.projects.findMany({
+      ...projectQueryOptions,
+    });
 
     const response: NextResponse<ProjectResult[]> = NextResponse.json(
       projectList,

@@ -23,7 +23,7 @@ const Article = ({
         href={`/posts/${id}`}
         className="h-full w-full self-center overflow-hidden rounded-lg sm:min-h-[240px] sm:min-w-[240px] sm:max-w-[240px]"
       >
-        <FullWidthImage image={thumbnail} name={title} aspectRatio="4/2.5" />
+        <FullWidthImage image={thumbnail} name={title} />
       </Link>
       <div className="flex flex-col gap-3 sm:flex-grow sm:justify-between">
         <div className="flex flex-col items-center gap-1 sm:items-start">
