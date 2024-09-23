@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import CustomLink from '@/components/CustomLink';
-import { TagsResult } from '@/types/tags.prisma';
+import { TagWithCount } from '@/types/tags.prisma';
 
 interface TagsProps {
-  tagList: TagsResult[];
+  tagList: TagWithCount[];
 }
 
 const Tags = ({ tagList }: TagsProps) => {

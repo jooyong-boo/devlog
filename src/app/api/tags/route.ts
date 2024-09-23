@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { tagsQueryOptions, TagsResult } from '@/types/tags.prisma';
+import { tagsQueryOptions, TagWithCount } from '@/types/tags.prisma';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
     const tagList = await prisma.tags.findMany(tagsQueryOptions);
 
-    const tags: TagsResult[] = tagList.map((tag) => {
+    const tags: TagWithCount[] = tagList.map((tag) => {
       return {
         id: tag.id,
         name: tag.name,
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    const response: NextResponse<TagsResult[]> = NextResponse.json(tags, {
+    const response: NextResponse<TagWithCount[]> = NextResponse.json(tags, {
       status: 200,
     });
     return response;
