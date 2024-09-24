@@ -1,7 +1,8 @@
+import { headers } from 'next/headers';
+import Link from 'next/link';
 import Button from '@/components/Button';
 import Viewer from '@/components/Editor/Viewer';
 import Tags from '@/components/Tags';
-import Textarea from '@/components/Textarea';
 import Title from '@/components/Title';
 import CommentInput from '@/containers/post/CommentInput';
 import CommentList from '@/containers/post/CommentList';
@@ -12,9 +13,12 @@ import { getPostDetail, getPostDetailNavigation } from '@/services/posts';
 import { formatDate } from '@/utils/convert';
 
 const page = async ({ params }: { params: { id: string } }) => {
+  const headersList = headers();
   const { id } = params;
+  const isAdmin = headersList.get('x-admin');
 
   const postDetail = await getPostDetail(id);
+
   const postNavigation = await getPostDetailNavigation(id);
 
   if (!postDetail) {
@@ -27,7 +31,14 @@ const page = async ({ params }: { params: { id: string } }) => {
         <time dateTime="2024-08-28">
           {formatDate(postDetail.createdAt, { format: 'full' })}
         </time>
-        <Title size="large">{postDetail.title}</Title>
+        <div className="flex items-center justify-between">
+          <Title size="large">{postDetail.title}</Title>
+          {isAdmin && (
+            <Link href={`/posts/${id}/edit`}>
+              <Button size="sm">수정하기</Button>
+            </Link>
+          )}
+        </div>
         <Tags tagList={postDetail.postTag} />
         <LinkedProjectCard
           subText={postDetail.project.name}
