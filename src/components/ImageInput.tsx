@@ -56,7 +56,7 @@ const ImageInput = ({ name, label, originSrc, id }: ImageInputProps) => {
             className="fill-slate-900 dark:fill-slate-50"
           />
         </Button>
-        {img && (
+        {(originSrc || img) && (
           <Image
             src={originSrc && !img ? originSrc : img}
             alt={name}
