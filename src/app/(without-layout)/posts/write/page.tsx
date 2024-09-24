@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
 import Editor from '@/components/Editor/Editor';
 import ImageInput from '@/components/ImageInput';
@@ -14,17 +14,12 @@ import { CreatePostRequest } from '@/types/post';
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const { enqueueWarningBar } = useToast();
 
   const goBack = () => {
     router.back();
   };
-
-  if (searchParams.get('id')) {
-    return <div>수정 페이지</div>;
-  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
