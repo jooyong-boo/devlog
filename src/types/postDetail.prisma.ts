@@ -11,6 +11,7 @@ export const postDetailQueryOptions = {
     updatedAt: true,
     thumbnail: true,
     viewCount: true,
+    published: true,
     postTag: {
       select: {
         tags: {

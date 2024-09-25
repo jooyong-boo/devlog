@@ -9,13 +9,14 @@ import useToast from '@/hooks/useToast';
 interface TagInputProps {
   label?: string;
   name?: string;
+  defaultTags?: string[];
 }
 
-const TagInput = ({ label, name }: TagInputProps) => {
+const TagInput = ({ label, name, defaultTags }: TagInputProps) => {
   const { enqueueWarningBar } = useToast();
 
   const [inputValue, setInputValue] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>(defaultTags || []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);

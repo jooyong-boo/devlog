@@ -9,12 +9,16 @@ import TagInput from '@/components/TagInput';
 import PostSetting from '@/containers/post/write/PostSetting';
 import useToast from '@/hooks/useToast';
 import InnerLayout from '@/layouts/InnerLayout';
-import { createPost } from '@/services/posts';
-import { CreatePostRequest } from '@/types/post';
+import { editPost } from '@/services/posts';
+import { UpdatePost } from '@/types/post';
+import { FormattedPostDetail } from '@/types/postDetail.prisma';
 
-const Page = () => {
+interface EditPostFormProps {
+  initialData: FormattedPostDetail;
+}
+
+const EditPostForm = ({ initialData }: EditPostFormProps) => {
   const router = useRouter();
-
   const { enqueueWarningBar } = useToast();
 
   const goBack = () => {
@@ -32,7 +36,7 @@ const Page = () => {
     const url = formData.get('url') as string;
     const projectId = formData.get('projectId') as string;
 
-    const body: CreatePostRequest = {
+    const body: UpdatePost = {
       title,
       content,
       tags,
@@ -43,7 +47,7 @@ const Page = () => {
     };
 
     try {
-      const result = await createPost({
+      const result = await editPost({
         ...body,
       });
       router.replace(`/posts/${result.id}`);
@@ -58,18 +62,34 @@ const Page = () => {
     <form onSubmit={handleSubmit}>
       <InnerLayout className="gap-3">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] items-center gap-x-4 gap-y-2">
-          <ImageInput name="thumbnail" label="썸네일 업로드" />
-          <PostSetting />
+          <ImageInput
+            name="thumbnail"
+            label="썸네일 업로드"
+            originSrc={initialData.thumbnail}
+          />
+          <PostSetting
+            defaultUrl={initialData.id}
+            defaultPublic={initialData.published ? 'public' : 'private'}
+            defaultProjectId={initialData.project.id}
+          />
         </div>
-        <Input placeholder="제목을 입력하세요" id="title" name="title" />
-        <Editor name="content" />
-        <TagInput name="tags" />
+        <Input
+          placeholder="제목을 입력하세요"
+          id="title"
+          name="title"
+          defaultValue={initialData.title}
+        />
+        <Editor name="content" value={initialData.content} />
+        <TagInput
+          name="tags"
+          defaultTags={initialData.postTag.map((tag) => tag.name)}
+        />
         <div className="flex items-center justify-end gap-2">
           <Button size="md" variant="light" onClick={goBack}>
             취소
           </Button>
           <Button size="md" type="submit">
-            게시하기
+            수정하기
           </Button>
         </div>
       </InnerLayout>
@@ -77,4 +97,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default EditPostForm;

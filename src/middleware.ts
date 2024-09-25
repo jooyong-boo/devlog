@@ -23,6 +23,7 @@ export async function middleware(request: NextRequest) {
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-current-path', currentPath);
+  requestHeaders.set('x-admin', isAdmin.toString());
 
   const response = NextResponse.next({
     request: {

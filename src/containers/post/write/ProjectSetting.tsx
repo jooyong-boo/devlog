@@ -1,11 +1,14 @@
-import { useState } from 'react';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import useInputClick from '@/containers/post/write/hooks/useInputClick';
 import useProjects from '@/containers/post/write/hooks/useProjects';
 import { cn } from '@/utils/cn';
 
-const ProjectSetting = () => {
+interface PostSettingProps {
+  defaultProjectId?: number;
+}
+
+const ProjectSetting = ({ defaultProjectId }: PostSettingProps) => {
   const {
     projectList,
     handleAddProject,
@@ -13,7 +16,7 @@ const ProjectSetting = () => {
     projectName,
     handleSelectProject,
     selectedProject,
-  } = useProjects();
+  } = useProjects({ projectId: defaultProjectId });
   const { inputRef, isInputActive, handleInputClick } = useInputClick();
 
   return (
