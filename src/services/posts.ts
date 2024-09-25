@@ -1,5 +1,9 @@
-import { getData, postData } from '@/services/customAxios';
-import { CreatePostRequest, PostDetailNavigationResponse } from '@/types/post';
+import { getData, patchData, postData } from '@/services/customAxios';
+import {
+  CreatePostRequest,
+  PostDetailNavigationResponse,
+  UpdatePost,
+} from '@/types/post';
 import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
 import { FormattedPostDetail } from '@/types/postDetail.prisma';
 import prisma from '../../prisma/client';
@@ -74,3 +78,33 @@ export const postComment = async ({
   id: string;
   content: string;
 }) => postData(`/api/posts/${id}/comments`, { content });
+
+// 게시글 수정
+export const editPost = async ({
+  title,
+  content,
+  tags,
+  thumbnail,
+  published,
+  url,
+  projectId,
+}: UpdatePost): Promise<FormattedPost> => {
+  const formData = new FormData();
+
+  // updatedThumbnail을 File 객체로 변환
+  if (thumbnail) {
+    const updatedThumbnail = new File([thumbnail], 'thumbnail', {
+      type: thumbnail.type,
+      lastModified: thumbnail.lastModified,
+    });
+    formData.append('thumbnail', updatedThumbnail);
+  }
+  formData.append('title', title);
+  formData.append('content', content);
+  tags.forEach((tag) => formData.append('tags', tag));
+  formData.append('published', published ? 'public' : 'private');
+  formData.append('url', url);
+  formData.append('projectId', projectId.toString());
+
+  return await patchData(`/api/posts/${url}`, formData);
+};

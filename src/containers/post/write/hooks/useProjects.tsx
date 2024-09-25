@@ -3,7 +3,11 @@ import useToast from '@/hooks/useToast';
 import { getProjects, postProjects } from '@/services/projects';
 import { ProjectResult } from '@/types/project.prisma';
 
-const useProjects = () => {
+interface UseProjectsProps {
+  projectId?: number;
+}
+
+const useProjects = ({ projectId }: UseProjectsProps) => {
   const { enqueueErrorBar, enqueueSuccessBar } = useToast();
   const [projectList, setProjectList] = useState<ProjectResult[]>([]);
   const [projectName, setProjectName] = useState('');
@@ -42,6 +46,15 @@ const useProjects = () => {
     }
     fetchProjectList();
   }, []);
+
+  useEffect(() => {
+    if (projectId) {
+      const project = projectList.find((project) => project.id === projectId);
+      if (project) {
+        setSelectedProject(project);
+      }
+    }
+  }, [projectId, projectList]);
 
   return {
     projectList,

@@ -5,14 +5,18 @@ import { Public, Lock } from '@/assets/svg/index';
 import Button from '@/components/Button';
 import Title from '@/components/Title';
 
-type Active = 'public' | 'private';
+export type Active = 'public' | 'private';
 
 interface PublicSettingProps {
   name: string;
+  defaultPublic?: Active;
 }
 
-const PublicSetting = ({ name }: PublicSettingProps) => {
-  const [activeButton, setActiveButton] = useState<Active>('public');
+const PublicSetting = ({
+  name,
+  defaultPublic = 'public',
+}: PublicSettingProps) => {
+  const [activeButton, setActiveButton] = useState<Active>(defaultPublic);
 
   const handleActiveButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { name } = e.currentTarget;

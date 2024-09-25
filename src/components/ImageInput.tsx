@@ -15,7 +15,7 @@ interface ImageInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const ImageInput = ({ name, label, originSrc, id }: ImageInputProps) => {
   const imageRef = useRef<HTMLInputElement | null>(null);
 
-  const [img, setImg] = useState<string>('');
+  const [img, setImg] = useState<string>(originSrc || '');
 
   const handleChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -56,7 +56,7 @@ const ImageInput = ({ name, label, originSrc, id }: ImageInputProps) => {
             className="fill-slate-900 dark:fill-slate-50"
           />
         </Button>
-        {img && (
+        {(originSrc || img) && (
           <Image
             src={originSrc && !img ? originSrc : img}
             alt={name}
