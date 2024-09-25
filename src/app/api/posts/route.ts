@@ -132,6 +132,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest) {}
-
 export async function DELETE(req: NextRequest) {}
