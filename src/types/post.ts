@@ -15,7 +15,15 @@ export interface CreatePostResponse {
   id: string;
 }
 
-export interface UpdatePost extends CreatePostRequest {}
+export interface UpdatePost {
+  title: string;
+  content: string;
+  tags: string[];
+  thumbnail?: File;
+  published: boolean;
+  url: string;
+  projectId: number;
+}
 
 export interface PostDetail {
   id: string;

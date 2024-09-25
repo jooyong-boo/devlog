@@ -10,7 +10,7 @@ import PostSetting from '@/containers/post/write/PostSetting';
 import useToast from '@/hooks/useToast';
 import InnerLayout from '@/layouts/InnerLayout';
 import { editPost } from '@/services/posts';
-import { CreatePostRequest } from '@/types/post';
+import { UpdatePost } from '@/types/post';
 import { FormattedPostDetail } from '@/types/postDetail.prisma';
 
 interface EditPostFormProps {
@@ -36,7 +36,7 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
     const url = formData.get('url') as string;
     const projectId = formData.get('projectId') as string;
 
-    const body: CreatePostRequest = {
+    const body: UpdatePost = {
       title,
       content,
       tags,
