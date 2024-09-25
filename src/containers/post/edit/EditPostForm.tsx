@@ -69,7 +69,7 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
           />
           <PostSetting
             defaultUrl={initialData.id}
-            // defaultPublic={initialData}
+            defaultPublic={initialData.published ? 'public' : 'private'}
             defaultProjectId={initialData.project.id}
           />
         </div>
