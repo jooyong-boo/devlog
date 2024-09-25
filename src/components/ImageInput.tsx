@@ -15,7 +15,7 @@ interface ImageInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const ImageInput = ({ name, label, originSrc, id }: ImageInputProps) => {
   const imageRef = useRef<HTMLInputElement | null>(null);
 
-  const [img, setImg] = useState<string>('');
+  const [img, setImg] = useState<string>(originSrc || '');
 
   const handleChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
