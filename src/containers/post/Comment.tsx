@@ -1,9 +1,10 @@
 import Button from '@/components/Button';
 import Profile from '@/components/Profile';
+import CommnetReplyInput from '@/containers/post/CommentReplyInput';
 import { Comment as CommentType } from '@/types/post';
 import { formatDate } from '@/utils/convert';
 
-const Comment = ({ content, createdAt, user }: CommentType) => {
+const Comment = ({ content, createdAt, user, id }: CommentType) => {
   return (
     <div className="flex flex-col items-start gap-4 py-4">
       <Profile border={false}>
@@ -15,8 +16,7 @@ const Comment = ({ content, createdAt, user }: CommentType) => {
         />
       </Profile>
       <p>{content}</p>
-      {/* TODO: 답글 리스트 보여주기 및 답글 달기 기능 */}
-      <Button outline>답글 달기</Button>
+      <CommnetReplyInput parentId={id} />
     </div>
   );
 };
