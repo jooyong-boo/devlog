@@ -19,7 +19,7 @@ const CommentInput = () => {
     setContent(value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { id } = params;
@@ -32,14 +32,16 @@ const CommentInput = () => {
     const formData = new FormData(e.currentTarget);
     const content = formData.get('content') as string;
 
-    postComment({
-      postId: id,
-      content,
-    }).then(() => {
+    try {
+      await postComment({
+        postId: id,
+        content,
+      });
+      router.refresh();
+    } finally {
       setContent('');
       setIsSibmitting(false);
-      router.refresh();
-    });
+    }
   };
 
   return (
