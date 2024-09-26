@@ -37,6 +37,7 @@ export interface PostDetail {
 }
 
 type CommentUser = Pick<User, 'nickname' | 'profile'>;
+
 export interface Comment {
   id: number;
   content: string;

@@ -33,7 +33,7 @@ const CommentInput = () => {
     const content = formData.get('content') as string;
 
     postComment({
-      id,
+      postId: id,
       content,
     }).then(() => {
       setContent('');

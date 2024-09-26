@@ -1,4 +1,5 @@
 import { getData, patchData, postData } from '@/services/customAxios';
+import { CreateComment } from '@/types/comment.prisma';
 import {
   CreatePostRequest,
   PostDetailNavigationResponse,
@@ -72,12 +73,11 @@ export const getPostDetailNavigation = async (
   getData(`/api/posts/${id}/navigation`);
 
 export const postComment = async ({
-  id,
   content,
-}: {
-  id: string;
-  content: string;
-}) => postData(`/api/posts/${id}/comments`, { content });
+  postId,
+  parentId,
+}: CreateComment) =>
+  postData(`/api/posts/${postId}/comments`, { content, parentId });
 
 // 게시글 수정
 export const editPost = async ({

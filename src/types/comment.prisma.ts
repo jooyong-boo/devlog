@@ -6,6 +6,7 @@ export const commentQueryOptions = {
     content: true,
     createdAt: true,
     updatedAt: true,
+    parentId: true,
     user: {
       select: {
         nickname: true,
@@ -20,3 +21,9 @@ export type CommentQueryOptions = typeof commentQueryOptions;
 export type CommentResult = Prisma.PostCommentsGetPayload<{
   select: CommentQueryOptions['select'];
 }>;
+
+export interface CreateComment {
+  content: string;
+  parentId?: number | null;
+  postId: string;
+}

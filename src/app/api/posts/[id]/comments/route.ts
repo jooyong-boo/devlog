@@ -39,7 +39,8 @@ export async function POST(
     // TODO: 토큰을 통해 유저 정보 확인
 
     const { id } = params;
-    const { content } = await req.json();
+    const { content, parentId }: { content: string; parentId?: number | null } =
+      await req.json();
 
     const session = await auth();
 
@@ -66,6 +67,7 @@ export async function POST(
         userId: userInfo.id,
         postId: id,
         content,
+        parentId,
       },
     });
 
