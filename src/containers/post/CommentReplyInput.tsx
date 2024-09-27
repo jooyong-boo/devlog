@@ -8,7 +8,7 @@ import useToast from '@/hooks/useToast';
 import { postCommentReply } from '@/services/posts';
 
 interface CommentReplyInputProps {
-  parentId?: number | null;
+  parentId: number | null;
 }
 
 const CommnetReplyInput = ({ parentId }: CommentReplyInputProps) => {
@@ -16,14 +16,20 @@ const CommnetReplyInput = ({ parentId }: CommentReplyInputProps) => {
   const params: { id?: string } = useParams();
   const { enqueueWarningBar } = useToast();
 
+  const [isReplying, setIsReplying] = useState(false);
+
   const [content, setContent] = useState('');
   const [isSibmitting, setIsSibmitting] = useState(false);
+
+  const handleReply = (state: boolean) => {
+    setIsReplying(state);
+  };
 
   const handleContentChange = (value: string) => {
     setContent(value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { id } = params;
@@ -40,28 +46,51 @@ const CommnetReplyInput = ({ parentId }: CommentReplyInputProps) => {
     const formData = new FormData(e.currentTarget);
     const content = formData.get('content') as string;
 
-    postCommentReply({
-      postId: id,
-      content,
-    }).then(() => {
-      setContent('');
-      setIsSibmitting(false);
+    try {
+      await postCommentReply({
+        postId: id,
+        content,
+        parentId,
+      });
       router.refresh();
-    });
+    } finally {
+      setContent('');
+      setIsReplying(false);
+      setIsSibmitting(false);
+    }
   };
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-      <Textarea
-        name="content"
-        placeholder="답글을 작성해주세요"
-        onChange={handleContentChange}
-        value={content}
-      />
-      <Button className="self-end" type="submit" disabled={isSibmitting}>
-        답글 작성
-      </Button>
-    </form>
+    <>
+      {!isReplying && (
+        <Button outline onClick={() => handleReply(true)}>
+          답글 달기
+        </Button>
+      )}
+      {isReplying && (
+        <form className="flex w-full flex-col gap-2" onSubmit={handleSubmit}>
+          <Textarea
+            name="content"
+            placeholder="답글을 작성해주세요"
+            onChange={handleContentChange}
+            value={content}
+          />
+          <div className="flex gap-2 self-end">
+            <Button
+              className="self-end"
+              disabled={isSibmitting}
+              onClick={() => handleReply(false)}
+              outline
+            >
+              취소
+            </Button>
+            <Button className="self-end" type="submit" disabled={isSibmitting}>
+              답글 작성
+            </Button>
+          </div>
+        </form>
+      )}
+    </>
   );
 };
 
