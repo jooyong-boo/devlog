@@ -1,8 +1,8 @@
 import Comment from '@/containers/post/Comment';
-import { Comment as CommentType } from '@/types/post';
+import { CommentWithReply } from '@/types/comment.prisma';
 
 interface CommentListProps {
-  lists: CommentType[];
+  lists: CommentWithReply[];
 }
 
 const CommentList = ({ lists }: CommentListProps) => {

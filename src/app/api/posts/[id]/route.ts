@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { postImages } from '@/services/images';
-import { commentQueryOptions } from '@/types/comment.prisma';
+import {
+  commentQueryOptions,
+  CommentResult,
+  CommentWithReply,
+} from '@/types/comment.prisma';
 import { CreatePostResponse } from '@/types/post';
 import {
   FormattedPostDetail,
@@ -8,6 +12,28 @@ import {
 } from '@/types/postDetail.prisma';
 import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../../prisma/client';
+
+function buildCommentTree(comments: CommentResult[]): CommentWithReply[] {
+  const commentMap: { [key: number]: CommentWithReply } = {};
+  const rootComments: CommentWithReply[] = [];
+
+  comments.forEach((comment) => {
+    commentMap[comment.id] = { ...comment, replies: [] };
+  });
+
+  comments.forEach((comment) => {
+    if (comment.parentId === null) {
+      rootComments.push(commentMap[comment.id]);
+    } else {
+      const parentComment = commentMap[comment.parentId];
+      if (parentComment) {
+        parentComment.replies.push(commentMap[comment.id]);
+      }
+    }
+  });
+
+  return rootComments;
+}
 
 export async function GET(
   request: NextRequest,
@@ -30,16 +56,21 @@ export async function GET(
 
     // id에 맞는 댓글 조회
     const comments = await prisma.postComments.findMany({
+      ...commentQueryOptions,
       where: {
         postId: id,
       },
-      ...commentQueryOptions,
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
+
+    const formattedComments = buildCommentTree(comments);
 
     const formattedTags = {
       ...postDetail,
       postTag: postDetail.postTag.map((tag) => tag.tags),
-      comments,
+      comments: formattedComments,
     };
 
     const response: NextResponse<FormattedPostDetail> = NextResponse.json(

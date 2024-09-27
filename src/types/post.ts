@@ -37,12 +37,14 @@ export interface PostDetail {
 }
 
 type CommentUser = Pick<User, 'nickname' | 'profile'>;
+
 export interface Comment {
   id: number;
   content: string;
   createdAt: Date;
   updatedAt: Date;
   user: CommentUser;
+  parentId: number | null;
 }
 
 export interface PostDetailResponse {
