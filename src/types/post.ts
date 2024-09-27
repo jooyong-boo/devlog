@@ -44,6 +44,7 @@ export interface Comment {
   createdAt: Date;
   updatedAt: Date;
   user: CommentUser;
+  parentId: number | null;
 }
 
 export interface PostDetailResponse {
