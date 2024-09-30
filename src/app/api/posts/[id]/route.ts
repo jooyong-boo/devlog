@@ -35,6 +35,23 @@ function buildCommentTree(comments: CommentResult[]): CommentWithReply[] {
   return rootComments;
 }
 
+// 댓글의 deletedAt이 있으면 content를 삭제된 댓글로 변경
+function formatCommentContent(comment: CommentWithReply[]): CommentWithReply[] {
+  return comment.map((c) => {
+    if (c.deletedAt) {
+      return {
+        ...c,
+        content: '삭제된 댓글입니다.',
+        replies: formatCommentContent(c.replies),
+      };
+    }
+    return {
+      ...c,
+      replies: formatCommentContent(c.replies),
+    };
+  });
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -66,17 +83,22 @@ export async function GET(
     });
 
     const formattedComments = buildCommentTree(comments);
+    const formattedCommentsWithDeleted =
+      formatCommentContent(formattedComments);
 
     const formattedTags = {
       ...postDetail,
       postTag: postDetail.postTag.map((tag) => tag.tags),
-      comments: formattedComments,
+      comments: formattedCommentsWithDeleted,
     };
 
     const response: NextResponse<FormattedPostDetail> = NextResponse.json(
       {
         ...formattedTags,
-        comments: { lists: formattedComments, totalCount: comments.length },
+        comments: {
+          lists: formattedCommentsWithDeleted,
+          totalCount: comments.length,
+        },
       },
       { status: 200 },
     );
