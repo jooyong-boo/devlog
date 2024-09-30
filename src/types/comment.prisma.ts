@@ -12,6 +12,7 @@ export const commentQueryOptions = {
         id: true,
         nickname: true,
         profile: true,
+        email: true,
       },
     },
   },
