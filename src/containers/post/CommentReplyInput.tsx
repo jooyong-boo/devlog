@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Button from '@/components/Button';
 import Textarea from '@/components/Textarea';
 import useToast from '@/hooks/useToast';
@@ -14,6 +15,8 @@ interface CommentReplyInputProps {
 const CommnetReplyInput = ({ parentId }: CommentReplyInputProps) => {
   const router = useRouter();
   const params: { id?: string } = useParams();
+  const { data: session } = useSession();
+
   const { enqueueWarningBar } = useToast();
 
   const [isReplying, setIsReplying] = useState(false);
@@ -34,6 +37,10 @@ const CommnetReplyInput = ({ parentId }: CommentReplyInputProps) => {
 
     const { id } = params;
 
+    if (!session) {
+      enqueueWarningBar('로그인이 필요합니다.', 'error');
+      return;
+    }
     if (!id) {
       enqueueWarningBar('게시글 정보를 찾을 수 없습니다.', 'error');
       return;
