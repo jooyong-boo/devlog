@@ -6,6 +6,7 @@ export const commentQueryOptions = {
     content: true,
     createdAt: true,
     updatedAt: true,
+    deletedAt: true,
     parentId: true,
     user: {
       select: {
@@ -32,4 +33,15 @@ export interface CreateComment {
   content: string;
   parentId?: number | null;
   postId: string;
+}
+
+export interface UpdateComment {
+  postId: string;
+  commentId: number;
+  content: string;
+}
+
+export interface DeleteComment {
+  postId: string;
+  commentId: number;
 }

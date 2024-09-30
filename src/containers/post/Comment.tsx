@@ -1,8 +1,10 @@
 'use client';
 
+import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Profile from '@/components/Profile';
 import CommnetReplyInput from '@/containers/post/CommentReplyInput';
+import { deleteComment, patchComment } from '@/services/posts';
 import { CommentWithReply } from '@/types/comment.prisma';
 import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/convert';
@@ -14,13 +16,36 @@ export interface CommentProps extends CommentWithReply {
 const Comment = ({
   content,
   createdAt,
+  deletedAt,
   user,
   id,
   replies,
   depth = 0,
 }: CommentProps) => {
+  const router = useRouter();
+  const params: { id?: string } = useParams();
+  const { id: postId } = params;
+
   const maxDepth = depth >= 3 ? 3 : depth;
   const session = useSession();
+
+  const handlePatchComment = async () => {
+    if (!postId) return;
+    await patchComment({
+      postId,
+      commentId: id,
+      content,
+    });
+  };
+
+  const handleDeleteComment = async () => {
+    if (!postId) return;
+    await deleteComment({
+      postId,
+      commentId: id,
+    });
+    router.refresh();
+  };
 
   return (
     <div
@@ -43,11 +68,22 @@ const Comment = ({
               })}
             />
           </Profile>
-          {session.status === 'authenticated' &&
+          {!deletedAt &&
+            session.status === 'authenticated' &&
             session.data.user?.email === user.email && (
               <div className="flex gap-2 text-xs text-slate-500">
-                <button className="hover:underline">수정</button>
-                <button className="hover:underline">삭제</button>
+                {/* <button
+                  className="hover:underline"
+                  onClick={() => handlePatchComment()}
+                >
+                  수정
+                </button> */}
+                <button
+                  className="hover:underline"
+                  onClick={() => handleDeleteComment()}
+                >
+                  삭제
+                </button>
               </div>
             )}
         </div>
