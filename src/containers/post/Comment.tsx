@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Profile from '@/components/Profile';
+import CommentEditForm from '@/containers/post/CommentEditForm';
 import CommnetReplyInput from '@/containers/post/CommentReplyInput';
 import { deleteComment, patchComment } from '@/services/posts';
 import { CommentWithReply } from '@/types/comment.prisma';
@@ -29,13 +31,14 @@ const Comment = ({
   const maxDepth = depth >= 3 ? 3 : depth;
   const session = useSession();
 
-  const handlePatchComment = async () => {
-    if (!postId) return;
-    await patchComment({
-      postId,
-      commentId: id,
-      content,
-    });
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleOpenEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCloseEdit = () => {
+    setIsEditing(false);
   };
 
   const handleDeleteComment = async () => {
@@ -72,12 +75,9 @@ const Comment = ({
             session.status === 'authenticated' &&
             session.data.user?.email === user.email && (
               <div className="flex gap-2 text-xs text-slate-500">
-                {/* <button
-                  className="hover:underline"
-                  onClick={() => handlePatchComment()}
-                >
+                <button className="hover:underline" onClick={handleOpenEdit}>
                   수정
-                </button> */}
+                </button>
                 <button
                   className="hover:underline"
                   onClick={() => handleDeleteComment()}
@@ -87,8 +87,19 @@ const Comment = ({
               </div>
             )}
         </div>
-        <p>{content}</p>
-        <CommnetReplyInput parentId={id} />
+        {!isEditing && (
+          <>
+            <p>{content}</p>
+            <CommnetReplyInput parentId={id} />
+          </>
+        )}
+        {isEditing && (
+          <CommentEditForm
+            initContent={content}
+            commentId={id}
+            handleClose={handleCloseEdit}
+          />
+        )}
       </div>
       {replies.map((reply) => (
         <Comment key={reply.id} {...reply} depth={depth + 1} />
