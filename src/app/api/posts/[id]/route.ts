@@ -74,7 +74,10 @@ export async function GET(
     };
 
     const response: NextResponse<FormattedPostDetail> = NextResponse.json(
-      formattedTags,
+      {
+        ...formattedTags,
+        comments: { lists: formattedComments, totalCount: comments.length },
+      },
       { status: 200 },
     );
 

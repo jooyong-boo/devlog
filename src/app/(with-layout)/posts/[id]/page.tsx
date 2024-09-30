@@ -64,10 +64,10 @@ const page = async ({ params }: { params: { id: string } }) => {
         )}
       </section>
       <section className="flex flex-col gap-3">
-        <Title size="small">{postDetail.comments.length}개의 댓글</Title>
+        <Title size="small">{postDetail.comments.totalCount}개의 댓글</Title>
         <CommentInput />
       </section>
-      <CommentList lists={postDetail.comments} />
+      <CommentList lists={postDetail.comments.lists} />
     </InnerLayout>
   );
 };
