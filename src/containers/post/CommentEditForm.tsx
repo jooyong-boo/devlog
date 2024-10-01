@@ -6,16 +6,26 @@ import { useSession } from 'next-auth/react';
 import Button from '@/components/Button';
 import Textarea from '@/components/Textarea';
 import useToast from '@/hooks/useToast';
-import { postComment } from '@/services/posts';
+import { patchComment } from '@/services/posts';
 
-const CommentInput = () => {
+interface CommentReplyInputProps {
+  initContent: string;
+  commentId: number;
+  handleClose: () => void;
+}
+
+const CommentEditForm = ({
+  initContent,
+  commentId,
+  handleClose,
+}: CommentReplyInputProps) => {
   const params: { id?: string } = useParams();
   const router = useRouter();
   const { data: session } = useSession();
 
   const { enqueueWarningBar } = useToast();
 
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initContent);
   const [isSibmitting, setIsSibmitting] = useState(false);
 
   const handleContentChange = (value: string) => {
@@ -36,35 +46,52 @@ const CommentInput = () => {
       enqueueWarningBar('게시글 정보를 찾을 수 없습니다.', 'error');
       return;
     }
+    if (!commentId) {
+      enqueueWarningBar('댓글 정보를 찾을 수 없습니다.', 'error');
+      return;
+    }
+
     setIsSibmitting(true);
     const formData = new FormData(e.currentTarget);
     const content = formData.get('content') as string;
 
     try {
-      await postComment({
+      await patchComment({
         postId: id,
+        commentId,
         content,
       });
       router.refresh();
     } finally {
+      handleClose();
       setContent('');
       setIsSibmitting(false);
     }
   };
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+    <form className="flex w-full flex-col gap-2" onSubmit={handleSubmit}>
       <Textarea
         name="content"
         placeholder="댓글을 작성해주세요"
         onChange={handleContentChange}
         value={content}
       />
-      <Button className="self-end" type="submit" disabled={isSibmitting}>
-        댓글 작성
-      </Button>
+      <div className="flex gap-2 self-end">
+        <Button
+          className="self-end"
+          disabled={isSibmitting}
+          onClick={handleClose}
+          outline
+        >
+          취소
+        </Button>
+        <Button className="self-end" type="submit" disabled={isSibmitting}>
+          댓글 수정
+        </Button>
+      </div>
     </form>
   );
 };
 
-export default CommentInput;
+export default CommentEditForm;

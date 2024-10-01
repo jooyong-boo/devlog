@@ -47,5 +47,8 @@ export type PostDetailResult = Prisma.PostsGetPayload<{
 
 export type FormattedPostDetail = Omit<PostDetailResult, 'postTag'> & {
   postTag: Tag[];
-  comments: CommentWithReply[];
+  comments: {
+    lists: CommentWithReply[];
+    totalCount: number;
+  };
 };
