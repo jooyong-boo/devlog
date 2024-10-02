@@ -1,7 +1,9 @@
 import { getData, postData } from '@/services/customAxios';
-import { FormattedPost } from '@/types/post.prisma';
 import { CreateProjectRequest } from '@/types/project';
-import { ProjectResult } from '@/types/project.prisma';
+import {
+  PostsByProjectPagination,
+  ProjectResult,
+} from '@/types/project.prisma';
 
 export const getProjects = async (): Promise<ProjectResult[]> => {
   return await getData<ProjectResult[]>('/api/projects');
@@ -15,8 +17,21 @@ export const postProjects = async (
   });
 };
 
-export const getProjectRelatedPosts = async (
-  name: string,
-): Promise<FormattedPost[]> => {
-  return await getData(`/api/projects/${name}/posts`);
+export const getProjectRelatedPosts = async ({
+  name,
+  count = 10,
+  page = 1,
+}: {
+  name: string;
+  count?: string | number;
+  page?: string | number;
+}): Promise<PostsByProjectPagination> => {
+  return await getData(
+    `/api/projects/${name}/posts`,
+    {},
+    {
+      count,
+      page,
+    },
+  );
 };

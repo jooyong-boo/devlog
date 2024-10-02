@@ -9,35 +9,26 @@ import {
   PostDetailNavigationResponse,
   UpdatePost,
 } from '@/types/post';
-import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import { FormattedPost, PostListWithPagination } from '@/types/post.prisma';
 import { FormattedPostDetail } from '@/types/postDetail.prisma';
-import prisma from '../../prisma/client';
 
 interface GetPostsRequest {
-  cursor?: string;
-  count?: number;
+  page?: string | number;
+  count?: string | number;
 }
 
-export const getPosts = async ({ cursor, count = 5 }: GetPostsRequest) => {
-  try {
-    const postLists = await prisma.posts.findMany({
-      ...postQueryOptions,
-      skip: cursor ? 1 : 0,
-      take: count,
-      ...(cursor && { cursor: { id: cursor } }),
-    });
-
-    const formattedTags = postLists.map((post) => {
-      return {
-        ...post,
-        postTag: post.postTag.map((tag) => tag.tags),
-      };
-    });
-
-    return formattedTags;
-  } catch (e) {
-    throw e;
-  }
+export const getPosts = async ({
+  page,
+  count = 5,
+}: GetPostsRequest): Promise<PostListWithPagination> => {
+  return await getData(
+    '/api/posts',
+    {},
+    {
+      page,
+      count,
+    },
+  );
 };
 
 export const createPost = async ({
@@ -61,7 +52,7 @@ export const createPost = async ({
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
   formData.append('thumbnail', updatedThumbnail);
-  formData.append('published', published ? 'public' : 'private');
+  formData.append('published', String(published));
   formData.append('url', url);
   formData.append('projectId', projectId.toString());
 
@@ -111,7 +102,8 @@ export const editPost = async ({
   tags,
   thumbnail,
   published,
-  url,
+  originUrl,
+  newUrl,
   projectId,
 }: UpdatePost): Promise<FormattedPost> => {
   const formData = new FormData();
@@ -127,9 +119,10 @@ export const editPost = async ({
   formData.append('title', title);
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
-  formData.append('published', published ? 'public' : 'private');
-  formData.append('url', url);
+  formData.append('published', String(published));
+  formData.append('originUrl', originUrl);
+  formData.append('newUrl', newUrl);
   formData.append('projectId', projectId.toString());
 
-  return await patchData(`/api/posts/${url}`, formData);
+  return await patchData(`/api/posts/${originUrl}`, formData);
 };

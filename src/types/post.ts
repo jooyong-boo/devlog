@@ -21,7 +21,8 @@ export interface UpdatePost {
   tags: string[];
   thumbnail?: File;
   published: boolean;
-  url: string;
+  originUrl: string;
+  newUrl: string;
   projectId: number;
 }
 

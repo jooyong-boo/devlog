@@ -6,6 +6,7 @@ import Editor from '@/components/Editor/Editor';
 import ImageInput from '@/components/ImageInput';
 import Input from '@/components/Input';
 import TagInput from '@/components/TagInput';
+import { editPostAction } from '@/containers/post/edit/actions';
 import PostSetting from '@/containers/post/write/PostSetting';
 import useToast from '@/hooks/useToast';
 import InnerLayout from '@/layouts/InnerLayout';
@@ -33,7 +34,8 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
     const tags = formData.getAll('tags') as string[];
     const thumbnail = formData.get('thumbnail') as File;
     const published = formData.get('published') as string;
-    const url = formData.get('url') as string;
+    const originUrl = initialData.id;
+    const newUrl = formData.get('url') as string;
     const projectId = formData.get('projectId') as string;
 
     const body: UpdatePost = {
@@ -42,7 +44,8 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
       tags,
       thumbnail,
       published: published === 'public',
-      url,
+      originUrl,
+      newUrl,
       projectId: Number(projectId),
     };
 
@@ -50,6 +53,7 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
       const result = await editPost({
         ...body,
       });
+      await editPostAction(result.id);
       router.replace(`/posts/${result.id}`);
     } catch (e) {
       if (e instanceof Error) {

@@ -51,3 +51,8 @@ export const postsByProjectQueryOptions = {
 export type PostsByProjectQueryOptions = typeof postsByProjectQueryOptions;
 
 export type PostsByProjectResult = Array<FormattedPost>;
+
+export type PostsByProjectPagination = {
+  posts: PostsByProjectResult;
+  pagination: PaginationOptions;
+};

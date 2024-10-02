@@ -128,38 +128,41 @@ export async function PATCH(req: NextRequest) {
     const tags = formData.getAll('tags') as string[];
     const thumbnail = formData.get('thumbnail') as File;
     const published = (formData.get('published') as string) === 'true';
-    const url = formData.get('url') as string;
+    const originUrl = formData.get('originUrl') as string;
+    const newUrl = formData.get('newUrl') as string;
     const projectId = Number(formData.get('projectId') as string);
 
     // 필수 필드 확인
-    if (!title || !content || !tags || !url || !projectId) {
+    if (!title || !content || !tags || !originUrl || !projectId) {
       return NextResponse.json(
         { message: '필수 필드가 누락되었습니다.' },
         { status: 400 },
       );
     }
 
-    // 이미 존재하는 id인지 확인
-    const existingPost = await prisma.posts.findUnique({
-      where: { id: url },
-    });
+    if (newUrl) {
+      // 이미 존재하는 id인지 확인
+      const existingPost = await prisma.posts.findUnique({
+        where: { id: newUrl },
+      });
 
-    if (!existingPost) {
-      return NextResponse.json(
-        { message: '존재하지 않는 글입니다.' },
-        { status: 400 },
-      );
+      if (existingPost) {
+        return NextResponse.json(
+          { message: '이미 존재하는 URL입니다.' },
+          { status: 400 },
+        );
+      }
     }
 
     if (thumbnail.size) {
       // thumbnail 업로드
       const thumbnailUrl = await postImages({
         file: thumbnail,
-        folder: `posts/${url}`,
+        folder: `posts/${newUrl ? newUrl : originUrl}`,
       });
 
       await prisma.posts.update({
-        where: { id: url },
+        where: { id: originUrl },
         data: {
           thumbnail: thumbnailUrl.imageUrl,
         },
@@ -170,11 +173,16 @@ export async function PATCH(req: NextRequest) {
     const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;
     const usedImages = content.match(imageUrlRegex) || [];
 
-    const updatedContent = await moveImages(url, content, usedImages);
+    const updatedContent = await moveImages(
+      newUrl ? newUrl : originUrl,
+      content,
+      usedImages,
+    );
 
     const updatedPost = await prisma.posts.update({
-      where: { id: url },
+      where: { id: originUrl },
       data: {
+        id: newUrl ? newUrl : originUrl,
         title,
         content: updatedContent,
         published,
@@ -189,7 +197,7 @@ export async function PATCH(req: NextRequest) {
     await cleanupTempImages();
 
     await prisma.postTags.deleteMany({
-      where: { postId: url },
+      where: { postId: updatedPost.id },
     });
 
     await Promise.all(
@@ -199,8 +207,15 @@ export async function PATCH(req: NextRequest) {
           update: {},
           create: { name: tag },
         });
-        await prisma.postTags.create({
-          data: {
+        await prisma.postTags.upsert({
+          where: {
+            postId_tagId: {
+              postId: updatedPost.id,
+              tagId: newTag.id,
+            },
+          },
+          update: {},
+          create: {
             tagId: newTag.id,
             postId: updatedPost.id,
           },
