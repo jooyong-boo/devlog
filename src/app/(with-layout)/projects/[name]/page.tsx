@@ -11,7 +11,7 @@ const page = async ({ params }: { params: { name: string } }) => {
   return (
     <InnerLayout>
       <Title size="large" borderBottom>
-        {name}
+        {decodeURIComponent(name)}
       </Title>
       <ArticleList articleList={posts} />
     </InnerLayout>

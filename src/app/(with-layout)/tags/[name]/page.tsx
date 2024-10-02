@@ -22,7 +22,7 @@ const page = async ({
 
   return (
     <InnerLayout>
-      <Title borderBottom>{name}</Title>
+      <Title borderBottom>{decodeURIComponent(name)}</Title>
       <ArticleList articleList={response.posts} />
       <Pagination
         currentPage={Number(page)}
