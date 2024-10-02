@@ -1,34 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { postImages } from '@/services/images';
 import { CreatePostResponse } from '@/types/post';
-import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import {
+  FormattedPost,
+  PostListWithPagination,
+  postQueryOptions,
+} from '@/types/post.prisma';
 import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../prisma/client';
 
 export async function GET(req: NextRequest) {
   try {
-    const cursor = req.nextUrl.searchParams.get('cursor');
-    const count = req.nextUrl.searchParams.get('count');
+    const page = parseInt(req.nextUrl.searchParams.get('page') || '1', 10);
+    const count = parseInt(req.nextUrl.searchParams.get('count') || '10', 10);
+
+    const totalPosts = await prisma.posts.count({
+      where: postQueryOptions.where,
+    });
+
+    const totalPages = Math.ceil(totalPosts / count);
 
     const postLists = await prisma.posts.findMany({
       ...postQueryOptions,
-      skip: cursor ? 1 : 0,
-      take: Number(count),
-      ...(cursor && { cursor: { id: cursor } }),
+      skip: (page - 1) * count,
+      take: count,
     });
 
-    const formattedTags = postLists.map((post) => {
-      return {
-        ...post,
-        postTag: post.postTag.map((tag) => tag.tags),
-      };
-    });
+    const formattedTags = postLists.map((post) => ({
+      ...post,
+      postTag: post.postTag.map((tag) => tag.tags),
+    }));
 
-    const response: NextResponse<FormattedPost[]> = NextResponse.json(
-      formattedTags,
+    const paginationInfo = {
+      currentPage: page,
+      totalPages: totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    };
+
+    const response: NextResponse<PostListWithPagination> = NextResponse.json(
       {
-        status: 200,
+        posts: formattedTags,
+        pagination: paginationInfo,
       },
+      { status: 200 },
     );
 
     return response;

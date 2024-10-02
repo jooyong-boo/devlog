@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { PaginationOptions } from '@/types/common';
 import { Tag } from '@/types/tags.prisma';
 
 export const postQueryOptions = {
@@ -24,6 +25,9 @@ export const postQueryOptions = {
   orderBy: {
     createdAt: 'desc' as const,
   },
+  where: {
+    published: true,
+  },
 } as const;
 
 export type PostQueryOptions = typeof postQueryOptions;
@@ -34,4 +38,9 @@ export type PostResult = Prisma.PostsGetPayload<{
 
 export type FormattedPost = Omit<PostResult, 'postTag'> & {
   postTag: Tag[];
+};
+
+export type PostListWithPagination = {
+  posts: FormattedPost[];
+  pagination: PaginationOptions;
 };

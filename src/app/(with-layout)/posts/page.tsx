@@ -4,8 +4,15 @@ import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getPosts } from '@/services/posts';
 
-const page = async () => {
-  const posts = await getPosts({ count: 10 });
+const page = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string; count?: string };
+}) => {
+  const { page, count } = searchParams;
+  const result = await getPosts({ page, count });
+
+  const { posts, pagination } = result;
 
   return (
     <InnerLayout>
@@ -13,7 +20,11 @@ const page = async () => {
         모든글
       </Title>
       <ArticleList articleList={posts} />
-      <Pagination currentPage={1} totalPages={3} basePath="/posts" />
+      <Pagination
+        currentPage={pagination.currentPage}
+        totalPages={pagination.totalPages}
+        basePath="/posts"
+      />
     </InnerLayout>
   );
 };
