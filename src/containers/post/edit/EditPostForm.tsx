@@ -34,7 +34,8 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
     const tags = formData.getAll('tags') as string[];
     const thumbnail = formData.get('thumbnail') as File;
     const published = formData.get('published') as string;
-    const url = formData.get('url') as string;
+    const originUrl = initialData.id;
+    const newUrl = formData.get('url') as string;
     const projectId = formData.get('projectId') as string;
 
     const body: UpdatePost = {
@@ -43,7 +44,8 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
       tags,
       thumbnail,
       published: published === 'public',
-      url,
+      originUrl,
+      newUrl,
       projectId: Number(projectId),
     };
 

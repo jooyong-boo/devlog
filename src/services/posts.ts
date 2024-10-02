@@ -52,7 +52,7 @@ export const createPost = async ({
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
   formData.append('thumbnail', updatedThumbnail);
-  formData.append('published', published ? 'public' : 'private');
+  formData.append('published', String(published));
   formData.append('url', url);
   formData.append('projectId', projectId.toString());
 
@@ -102,7 +102,8 @@ export const editPost = async ({
   tags,
   thumbnail,
   published,
-  url,
+  originUrl,
+  newUrl,
   projectId,
 }: UpdatePost): Promise<FormattedPost> => {
   const formData = new FormData();
@@ -119,8 +120,9 @@ export const editPost = async ({
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
   formData.append('published', String(published));
-  formData.append('url', url);
+  formData.append('originUrl', originUrl);
+  formData.append('newUrl', newUrl);
   formData.append('projectId', projectId.toString());
 
-  return await patchData(`/api/posts/${url}`, formData);
+  return await patchData(`/api/posts/${originUrl}`, formData);
 };

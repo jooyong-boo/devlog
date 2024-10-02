@@ -21,7 +21,7 @@ const PostSetting = ({
         id="url"
         label="URL 설정"
         name="url"
-        value={defaultUrl}
+        defaultValue={defaultUrl}
       />
       <ProjectSetting defaultProjectId={defaultProjectId} />
     </div>
