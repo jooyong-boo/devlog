@@ -9,35 +9,26 @@ import {
   PostDetailNavigationResponse,
   UpdatePost,
 } from '@/types/post';
-import { FormattedPost, postQueryOptions } from '@/types/post.prisma';
+import { FormattedPost, PostListWithPagination } from '@/types/post.prisma';
 import { FormattedPostDetail } from '@/types/postDetail.prisma';
-import prisma from '../../prisma/client';
 
 interface GetPostsRequest {
-  cursor?: string;
-  count?: number;
+  page?: string | number;
+  count?: string | number;
 }
 
-export const getPosts = async ({ cursor, count = 5 }: GetPostsRequest) => {
-  try {
-    const postLists = await prisma.posts.findMany({
-      ...postQueryOptions,
-      skip: cursor ? 1 : 0,
-      take: count,
-      ...(cursor && { cursor: { id: cursor } }),
-    });
-
-    const formattedTags = postLists.map((post) => {
-      return {
-        ...post,
-        postTag: post.postTag.map((tag) => tag.tags),
-      };
-    });
-
-    return formattedTags;
-  } catch (e) {
-    throw e;
-  }
+export const getPosts = async ({
+  page,
+  count = 5,
+}: GetPostsRequest): Promise<PostListWithPagination> => {
+  return await getData(
+    '/api/posts',
+    {},
+    {
+      page,
+      count,
+    },
+  );
 };
 
 export const createPost = async ({

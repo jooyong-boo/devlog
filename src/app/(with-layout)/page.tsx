@@ -6,11 +6,9 @@ import InnerLayout from '@/layouts/InnerLayout';
 import { getPosts } from '@/services/posts';
 
 const Home = async () => {
-  const posts = await getPosts({});
+  const result = await getPosts({ count: 5 });
 
-  if (!posts) {
-    return <div>Loading...</div>;
-  }
+  const { posts } = result;
 
   return (
     <InnerLayout>
