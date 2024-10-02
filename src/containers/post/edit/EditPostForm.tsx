@@ -6,6 +6,7 @@ import Editor from '@/components/Editor/Editor';
 import ImageInput from '@/components/ImageInput';
 import Input from '@/components/Input';
 import TagInput from '@/components/TagInput';
+import { editPostAction } from '@/containers/post/edit/actions';
 import PostSetting from '@/containers/post/write/PostSetting';
 import useToast from '@/hooks/useToast';
 import InnerLayout from '@/layouts/InnerLayout';
@@ -50,6 +51,7 @@ const EditPostForm = ({ initialData }: EditPostFormProps) => {
       const result = await editPost({
         ...body,
       });
+      await editPostAction(result.id);
       router.replace(`/posts/${result.id}`);
     } catch (e) {
       if (e instanceof Error) {
