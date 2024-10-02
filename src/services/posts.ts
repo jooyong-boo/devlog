@@ -118,7 +118,7 @@ export const editPost = async ({
   formData.append('title', title);
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
-  formData.append('published', published ? 'public' : 'private');
+  formData.append('published', String(published));
   formData.append('url', url);
   formData.append('projectId', projectId.toString());
 
