@@ -3,6 +3,16 @@ import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getProjectRelatedPosts } from '@/services/projects';
+import prisma from '../../../../../prisma/client';
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const projects = await prisma.projects.findMany();
+  return projects.map((project) => ({
+    name: project.name,
+  }));
+}
 
 const page = async ({
   params,
@@ -17,7 +27,7 @@ const page = async ({
   const result = await getProjectRelatedPosts({
     name,
     page,
-    count: 5,
+    count,
   });
 
   const { pagination, posts } = result;

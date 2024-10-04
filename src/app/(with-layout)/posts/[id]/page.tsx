@@ -11,6 +11,35 @@ import LinkedProjectCard from '@/containers/post/LinkedProjectCard';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getPostDetail, getPostDetailNavigation } from '@/services/posts';
 import { formatDate } from '@/utils/convert';
+import prisma from '../../../../../prisma/client';
+
+export const revalidate = 60;
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const { id } = params;
+
+  const postDetail = await getPostDetail(id);
+
+  return {
+    title: postDetail.title,
+    description: postDetail.content,
+    image: postDetail.thumbnail,
+  };
+}
+
+export async function generateStaticParams() {
+  const result = await prisma.posts.findMany({
+    where: {
+      published: true,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return result.map((post) => ({
+    id: post.id.toString(),
+  }));
+}
 
 const page = async ({ params }: { params: { id: string } }) => {
   const headersList = headers();
