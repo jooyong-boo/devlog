@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { postImages } from '@/services/images';
 import { CreatePostResponse } from '@/types/post';
-import {
-  FormattedPost,
-  PostListWithPagination,
-  postQueryOptions,
-} from '@/types/post.prisma';
+import { PostListWithPagination, postQueryOptions } from '@/types/post.prisma';
 import { cleanupTempImages, moveImages } from '@/utils/s3';
 import prisma from '../../../../prisma/client';
 

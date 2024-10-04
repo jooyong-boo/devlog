@@ -3,6 +3,16 @@ import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getTagsRelatedPosts } from '@/services/tags';
+import prisma from '../../../../../prisma/client';
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const tags = await prisma.tags.findMany();
+  return tags.map((tag) => ({
+    name: tag.name,
+  }));
+}
 
 const page = async ({
   params,
