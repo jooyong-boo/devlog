@@ -85,10 +85,12 @@ export async function POST(req: NextRequest) {
     }
 
     // thumbnail 업로드
-    const thumbnailUrl = await postImages({
-      file: thumbnail,
-      folder: `posts/${url}`,
-    });
+    const thumbnailUrl = thumbnail.size
+      ? await postImages({
+          file: thumbnail,
+          folder: `posts/${url}`,
+        })
+      : { imageUrl: '' };
 
     // 현재 게시물의 내용에서 이미지 URL 추출
     const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;

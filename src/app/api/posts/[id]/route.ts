@@ -140,7 +140,7 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    if (newUrl) {
+    if (newUrl !== originUrl) {
       // 이미 존재하는 id인지 확인
       const existingPost = await prisma.posts.findUnique({
         where: { id: newUrl },
