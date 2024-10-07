@@ -52,5 +52,13 @@
     ],
     "react/display-name": "off",
     "no-console": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/app/api/**"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

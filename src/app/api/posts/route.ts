@@ -138,6 +138,7 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (e) {
+    console.log('POST /api/posts error', e);
     return NextResponse.json(
       { message: '글 작성 중 오류가 발생했습니다.' },
       { status: 500 },
