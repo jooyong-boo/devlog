@@ -27,6 +27,9 @@ const nextConfig = {
       {
         hostname: 'devlog-local.s3.ap-northeast-2.amazonaws.com',
       },
+      {
+        hostname: 'devlog-production.s3.ap-northeast-2.amazonaws.com',
+      },
     ],
   },
 };
