@@ -230,6 +230,7 @@ export async function PATCH(req: NextRequest) {
 
     return response;
   } catch (e) {
+    console.log('PATCH /api/posts error', e);
     return NextResponse.json(
       { message: '글 수정 중 오류가 발생했습니다.' },
       { status: 500 },
