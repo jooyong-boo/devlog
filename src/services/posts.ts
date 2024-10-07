@@ -42,16 +42,18 @@ export const createPost = async ({
 }: CreatePostRequest): Promise<FormattedPost> => {
   const formData = new FormData();
 
-  // updatedThumbnail을 File 객체로 변환
-  const updatedThumbnail = new File([thumbnail], 'thumbnail', {
-    type: thumbnail.type,
-    lastModified: thumbnail.lastModified,
-  });
+  if (thumbnail) {
+    // updatedThumbnail을 File 객체로 변환
+    const updatedThumbnail = new File([thumbnail], 'thumbnail', {
+      type: thumbnail.type,
+      lastModified: thumbnail.lastModified,
+    });
+    formData.append('thumbnail', updatedThumbnail);
+  }
 
   formData.append('title', title);
   formData.append('content', content);
   tags.forEach((tag) => formData.append('tags', tag));
-  formData.append('thumbnail', updatedThumbnail);
   formData.append('published', String(published));
   formData.append('url', url);
   formData.append('projectId', projectId.toString());
