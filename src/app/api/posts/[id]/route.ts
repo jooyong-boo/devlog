@@ -60,7 +60,7 @@ export async function GET(
     const { id } = params;
     // id로 글 조회
     const postDetail = await prisma.posts.findUnique({
-      where: { id },
+      where: { id, published: true },
       ...postDetailQueryOptions,
     });
 
@@ -238,4 +238,42 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {}
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const { id } = params;
+
+    const post = await prisma.posts.findUnique({
+      where: { id },
+    });
+
+    if (!post) {
+      return NextResponse.json(
+        { message: '해당 글이 존재하지 않습니다.' },
+        { status: 404 },
+      );
+    }
+
+    // deletedAt을 갱신하고 published를 false로 변경
+    await prisma.posts.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        published: false,
+      },
+    });
+
+    return NextResponse.json(
+      { message: '글이 삭제되었습니다.' },
+      { status: 200 },
+    );
+  } catch (e) {
+    console.log('DELETE /api/posts error', e);
+    return NextResponse.json(
+      { message: '글 삭제 중 오류가 발생했습니다.' },
+      { status: 500 },
+    );
+  }
+}

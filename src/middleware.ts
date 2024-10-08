@@ -17,7 +17,8 @@ export async function middleware(request: NextRequest) {
         ? '__Secure-authjs.session-token'
         : 'authjs.session-token',
   });
-  const isAdmin = session?.role.name === 'admin';
+
+  const isAdmin = session?.user.role.name === 'admin';
 
   const theme = request.cookies.get('theme');
 
