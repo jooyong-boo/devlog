@@ -1,6 +1,4 @@
 import { headers } from 'next/headers';
-import Link from 'next/link';
-import Button from '@/components/Button';
 import Viewer from '@/components/Editor/Viewer';
 import Tags from '@/components/Tags';
 import Title from '@/components/Title';
@@ -8,6 +6,7 @@ import CommentInput from '@/containers/post/CommentInput';
 import CommentList from '@/containers/post/CommentList';
 import LinkedPostCard from '@/containers/post/LinkedPostCard';
 import LinkedProjectCard from '@/containers/post/LinkedProjectCard';
+import PostMenu from '@/containers/post/PostMenu';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getPostDetail, getPostDetailNavigation } from '@/services/posts';
 import { formatDate } from '@/utils/convert';
@@ -50,10 +49,6 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   const postNavigation = await getPostDetailNavigation(id);
 
-  if (!postDetail) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <InnerLayout className="gap-4">
       <div className="flex flex-col gap-2 border-b border-slate-400 pb-3">
@@ -62,11 +57,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         </time>
         <div className="flex items-center justify-between">
           <Title size="large">{postDetail.title}</Title>
-          {isAdmin && (
-            <Link href={`/posts/${id}/edit`}>
-              <Button size="sm">수정하기</Button>
-            </Link>
-          )}
+          {isAdmin && <PostMenu id={id} />}
         </div>
         <Tags tagList={postDetail.postTag} />
         <LinkedProjectCard
