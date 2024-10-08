@@ -80,7 +80,7 @@ model Posts {
   id        String  @id @db.VarChar(255)
   title     String  @db.VarChar(255)
   content   String  @db.Text
-  thumbnail String?  @default("https://devlog-production.s3.ap-northeast-2.amazonaws.com/common/default.png") @db.VarChar(255)
+  thumbnail String  @default("https://devlog-production.s3.ap-northeast-2.amazonaws.com/common/default.png") @db.VarChar(255)
   published Boolean @default(true)
   projectId Int     @map("project_id")
   viewCount Int     @default(0) @map("view_cnt")
