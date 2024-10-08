@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
           file: thumbnail,
           folder: `posts/${url}`,
         })
-      : { imageUrl: '' };
+      : { imageUrl: undefined };
 
     // 현재 게시물의 내용에서 이미지 URL 추출
     const imageUrlRegex = /https:\/\/.*?\.amazonaws\.com\/posts\/[^\s"')]+/g;

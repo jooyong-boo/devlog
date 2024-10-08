@@ -72,7 +72,7 @@ const page = async ({ params }: { params: { id: string } }) => {
         <LinkedProjectCard
           subText={postDetail.project.name}
           title={postDetail.project.desc}
-          href={`/projects/${postDetail.project.id}`}
+          href={`/projects/${postDetail.project.name}`}
         />
       </div>
       {/* TODO: 게시글 상세 목차기능  (https://github.com/tscanlin/tocbot) - pc는 오른쪽 사이드, 모바일은 제목과 본문 사이 (velog 참고) */}
