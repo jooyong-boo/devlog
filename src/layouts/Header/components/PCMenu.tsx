@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
@@ -26,6 +26,10 @@ const PCMenu = () => {
     signIn(type, { callbackUrl: pathname });
   };
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   return (
     <div className="z-10 hidden sm:flex">
       <button onClick={handleToggleMenu}>
@@ -46,7 +50,7 @@ const PCMenu = () => {
             >
               <Close className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
             </button>
-            <div className="mb-4 flex justify-center gap-4 border-b pb-4">
+            <div className="mb-4 mt-4 flex justify-center gap-4 border-b pb-4">
               {session && (
                 <Profile>
                   <Profile.Info
