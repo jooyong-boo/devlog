@@ -16,3 +16,4 @@ export { default as ArrowUp } from './arrow_up.svg';
 export { default as Public } from './public.svg';
 export { default as Lock } from './lock.svg';
 export { default as Folder } from './folder.svg';
+export { default as BurgerMenu } from './burger_menu.svg';

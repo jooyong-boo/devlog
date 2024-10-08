@@ -1,4 +1,9 @@
-import { getData, patchData, postData } from '@/services/customAxios';
+import {
+  deleteData,
+  getData,
+  patchData,
+  postData,
+} from '@/services/customAxios';
 import {
   CreateComment,
   DeleteComment,
@@ -127,4 +132,9 @@ export const editPost = async ({
   formData.append('projectId', projectId.toString());
 
   return await patchData(`/api/posts/${originUrl}`, formData);
+};
+
+// 게시글 삭제
+export const deletePost = async (id: string) => {
+  return await deleteData(`/api/posts/${id}`);
 };

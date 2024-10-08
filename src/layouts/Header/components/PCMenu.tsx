@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Close, Github, Google } from '@/assets/svg/index';
+import Button from '@/components/Button';
 import Profile from '@/components/Profile';
 import { menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
@@ -26,6 +27,10 @@ const PCMenu = () => {
     signIn(type, { callbackUrl: pathname });
   };
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   return (
     <div className="z-10 hidden sm:flex">
       <button onClick={handleToggleMenu}>
@@ -46,25 +51,32 @@ const PCMenu = () => {
             >
               <Close className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
             </button>
-            <div className="mb-4 flex justify-center gap-4 border-b pb-4">
+            <div className="mb-4 mt-4 flex justify-center gap-4 border-b border-slate-600 pb-4">
               {session && (
-                <Profile>
-                  <Profile.Info
-                    src={session.user?.image || ''}
-                    alt={session.user?.name || 'guest'}
-                    name={session.user?.name || 'guest'}
-                  />
-                  <Profile.Buttons>
-                    <Profile.Button disabled>
-                      <p>Change Profile</p>
-                    </Profile.Button>
-                    <Profile.Button
-                      onClick={() => signOut({ callbackUrl: '/' })}
-                    >
-                      <p>Sign out</p>
-                    </Profile.Button>
-                  </Profile.Buttons>
-                </Profile>
+                <div className="flex flex-col gap-2">
+                  <Profile>
+                    <Profile.Info
+                      src={session.user?.image || ''}
+                      alt={session.user?.name || 'guest'}
+                      name={session.user?.name || 'guest'}
+                    />
+                    <Profile.Buttons>
+                      <Profile.Button disabled>
+                        <p>Change Profile</p>
+                      </Profile.Button>
+                      <Profile.Button
+                        onClick={() => signOut({ callbackUrl: '/' })}
+                      >
+                        <p>Sign out</p>
+                      </Profile.Button>
+                    </Profile.Buttons>
+                  </Profile>
+                  {session.user.role.name === 'admin' && (
+                    <Link href="/posts/write">
+                      <Button size="full">새 글 작성</Button>
+                    </Link>
+                  )}
+                </div>
               )}
               {!session && (
                 <>
