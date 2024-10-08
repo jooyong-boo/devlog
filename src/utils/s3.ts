@@ -71,6 +71,8 @@ export const cleanupTempImages = async (): Promise<void> => {
       }
     }
   } catch (error) {
-    throw new Error('Failed to cleanup temporary images');
+    throw new Error(
+      `Failed to cleanup temporary images: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 };
