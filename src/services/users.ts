@@ -10,3 +10,15 @@ export const postUsers = async (data: {
 }): Promise<void> => {
   await postData('/api/user', data);
 };
+
+export const editUsers = async (data: {
+  nickname: string;
+  profile: File;
+}): Promise<void> => {
+  const formData = new FormData();
+  formData.append('nickname', data.nickname);
+  if (data.profile.size) {
+    formData.append('profile', data.profile);
+  }
+  await postData('/api/user', data);
+};
