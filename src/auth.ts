@@ -18,6 +18,7 @@ declare module 'next-auth' {
   }
   export interface Session {
     user: User & {
+      id: string;
       name: string | null;
       email: string | null;
       image: string | null;
@@ -30,6 +31,7 @@ declare module 'next-auth/jwt' {
   interface JWT {
     accessToken: string;
     user: {
+      id: string;
       createdAt: string;
       role: {
         name: string;
@@ -82,6 +84,7 @@ const authOptions: NextAuthConfig = {
       const user = await prisma.users.findUnique({
         where: { email: token.email as string },
         select: {
+          id: true,
           createdAt: true,
           nickname: true,
           oauthProvider: {
@@ -108,6 +111,7 @@ const authOptions: NextAuthConfig = {
     session: async ({ session, token }) => {
       session = { ...session, ...token.user };
       if (token) {
+        session.user.id = token.user.id;
         session.user.role = token.user.role;
         session.user.oauthProvider = token.user.oauthProvider;
         session.user.nickname = token.user.nickname;
