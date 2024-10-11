@@ -6,16 +6,17 @@ import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Close, Github, Google } from '@/assets/svg/index';
 import Button from '@/components/Button';
+import useModal from '@/components/Modal/hooks/useModal';
 import Profile from '@/components/Profile';
+import ProfileEdit from '@/containers/header/ProfileEdit';
 import { menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
 const PCMenu = () => {
   const pathname = usePathname();
-
   const { data: session } = useSession();
-
   const { isActive } = useActive();
+  const { Modal, open } = useModal();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -57,11 +58,15 @@ const PCMenu = () => {
                   <Profile>
                     <Profile.Info
                       src={session.user?.image || ''}
-                      alt={session.user?.name || 'guest'}
-                      name={session.user?.name || 'guest'}
+                      alt={session.user?.nickname || 'guest'}
+                      name={session.user?.nickname || 'guest'}
                     />
                     <Profile.Buttons>
-                      <Profile.Button disabled>
+                      <Profile.Button
+                        onClick={() => {
+                          open('profileEdit');
+                        }}
+                      >
                         <p>Change Profile</p>
                       </Profile.Button>
                       <Profile.Button
@@ -111,6 +116,14 @@ const PCMenu = () => {
           </div>
         </div>
       )}
+      <Modal modalKey="profileEdit">
+        {session && (
+          <ProfileEdit
+            profileSrc={session?.user.image}
+            nickname={session?.user.nickname}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

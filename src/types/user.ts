@@ -14,5 +14,5 @@ export interface User {
   nickname: string;
   email: string;
   role: (typeof userRoles)[keyof typeof userRoles];
-  profile?: string;
+  profile: string;
 }

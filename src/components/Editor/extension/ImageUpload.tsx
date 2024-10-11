@@ -3,7 +3,14 @@ import { ImageSvg } from '@/assets/svg/editor/index';
 import { ToolbarProps } from '@/components/Editor/Toolbar';
 import { postImages } from '@/services/images';
 
-const ImageUpload = ({ editor }: ToolbarProps) => {
+interface ImageUploadProps extends ToolbarProps {
+  path?: string;
+}
+
+const ImageUpload = ({
+  editor,
+  path = 'posts/temporary',
+}: ImageUploadProps) => {
   const imageRef = useRef<HTMLInputElement>(null);
 
   const handleUploadImage = async (
@@ -15,7 +22,7 @@ const ImageUpload = ({ editor }: ToolbarProps) => {
       return;
     }
 
-    const result = await postImages({ file, folder: 'posts/temporary' });
+    const result = await postImages({ file, folder: path });
 
     editor.chain().focus().setImage({ src: result.imageUrl }).run();
   };
