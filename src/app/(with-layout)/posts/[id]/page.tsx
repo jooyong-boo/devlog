@@ -22,7 +22,20 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return {
     title: postDetail.title,
     description: postDetail.content,
+    openGraph: {
+      title: postDetail.title,
+      description: postDetail.content,
+      images: [postDetail.thumbnail],
+    },
     image: postDetail.thumbnail,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
   };
 }
 
