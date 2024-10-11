@@ -5,6 +5,7 @@ import { DefaultToastOptions, Toaster } from 'react-hot-toast';
 import AuthContext from '@/app/context/AuthContext';
 import { getSession } from '@/auth';
 import { Pretendard } from '@/constants/localFont';
+import GoogleAnalytics from '@/lib/GoogleAnalytics';
 import { tailwindTheme } from '@/utils/tailwindTheme';
 
 export const metadata: Metadata = {
@@ -50,6 +51,9 @@ export default async function RootLayout({
       <body
         className={`flex min-h-screen flex-col bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50 ${Pretendard.className} mx-auto my-0 max-w-[1000px]`}
       >
+        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+        )}
         <AuthContext session={session}>
           <Toaster position="top-center" toastOptions={toasterOptions} />
           <main className="flex flex-grow flex-col">{children}</main>
