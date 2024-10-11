@@ -1,5 +1,5 @@
 import { useCallback, useState, ReactNode, useEffect } from 'react';
-import ModalContainer, { ModalType } from '@/components/Modal/ModalContainer';
+import ModalContainer from '@/components/Modal/ModalContainer';
 import ModalPortal from '@/components/Modal/ModalPortal';
 
 interface UseModalProps {
@@ -35,24 +35,18 @@ const useModal = ({ useBlur = true }: UseModalProps = {}) => {
     ({
       children,
       modalKey,
-      modalType,
       displayClose,
-      modalHeight,
     }: {
       children: ReactNode;
       modalKey: string;
-      modalType?: ModalType;
       displayClose?: string;
-      modalHeight?: string;
     }) => {
       return modals.includes(`${modalKey}Modal`) ? (
         <ModalPortal modalKey={`${modalKey}Modal`}>
           <ModalContainer
             isOpen
-            modalType={modalType}
             onClose={useBlur ? () => close(modalKey) : () => {}}
             displayClose={displayClose}
-            modalHeight={modalHeight}
           >
             {children}
           </ModalContainer>
