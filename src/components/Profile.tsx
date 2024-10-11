@@ -46,7 +46,7 @@ Profile.Info = ({ src, alt, name, date }: ProfileInfoProps) => {
         alt={alt}
         width={60}
         height={60}
-        className="h-10 w-10 rounded-full md:h-14 md:w-14"
+        className="h-10 w-10 rounded-full object-cover md:h-14 md:w-14"
       />
       <div className="flex-col justify-center">
         <p className="text-sm font-semibold md:text-lg">{name}</p>

@@ -6,16 +6,17 @@ import { usePathname } from 'next/navigation';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Menu, Github, Google } from '@/assets/svg/index';
 import Button from '@/components/Button';
+import useModal from '@/components/Modal/hooks/useModal';
 import Profile from '@/components/Profile';
+import ProfileEdit from '@/containers/header/ProfileEdit';
 import { menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
 function MobileMenu() {
   const pathname = usePathname();
-
-  const { isActive } = useActive();
-
   const { data: session } = useSession();
+  const { isActive } = useActive();
+  const { Modal, open } = useModal();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -41,10 +42,7 @@ function MobileMenu() {
         <Menu className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
       </button>
       {isMenuOpen && (
-        <div
-          className="fixed left-0 top-0 h-full w-full bg-opacity-30"
-          onClick={handleMenuOpen}
-        >
+        <div className="fixed left-0 top-0 w-full bg-opacity-30">
           <div className="absolute left-0 top-14 w-full bg-slate-100 shadow-lg dark:bg-slate-800">
             <div className="flex justify-center gap-4 border-b border-slate-600 pb-4">
               {session && (
@@ -52,11 +50,15 @@ function MobileMenu() {
                   <Profile>
                     <Profile.Info
                       src={session.user?.image || ''}
-                      alt={session.user?.name || 'guest'}
-                      name={session.user?.name || 'guest'}
+                      alt={session.user?.nickname || 'guest'}
+                      name={session.user?.nickname || 'guest'}
                     />
                     <Profile.Buttons>
-                      <Profile.Button disabled>
+                      <Profile.Button
+                        onClick={() => {
+                          open('profileEdit');
+                        }}
+                      >
                         <p>Change Profile</p>
                       </Profile.Button>
                       <Profile.Button
@@ -107,6 +109,14 @@ function MobileMenu() {
           </div>
         </div>
       )}
+      <Modal modalKey="profileEdit">
+        {session && (
+          <ProfileEdit
+            profileSrc={session?.user.image}
+            nickname={session?.user.nickname}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
