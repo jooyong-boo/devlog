@@ -1,8 +1,9 @@
 import React from 'react';
-import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import Button from '@/components/Button';
 import ImageInput from '@/components/ImageInput';
 import Input from '@/components/Input';
+import useToast from '@/hooks/useToast';
 import { editUsers } from '@/services/users';
 
 interface ProfileEditProps {
@@ -11,6 +12,9 @@ interface ProfileEditProps {
 }
 
 const ProfileEdit = ({ nickname, profileSrc }: ProfileEditProps) => {
+  const { enqueueSuccessBar } = useToast();
+  const { status, update } = useSession();
+
   const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -19,7 +23,14 @@ const ProfileEdit = ({ nickname, profileSrc }: ProfileEditProps) => {
     const profile = formData.get('profile') as File;
 
     try {
-      await editUsers({ nickname, profile });
+      const result = await editUsers({ nickname, profile });
+      if (status === 'authenticated') {
+        update({
+          profile: result.userInfo.profile,
+          nickname: result.userInfo.nickname,
+        });
+      }
+      enqueueSuccessBar(result.message, 'edit');
     } catch (e) {
       alert(e);
     }
