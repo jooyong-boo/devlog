@@ -19,9 +19,9 @@ declare module 'next-auth' {
   export interface Session {
     user: User & {
       id: string;
-      name: string | null;
-      email: string | null;
-      image: string | null;
+      name: string;
+      email: string;
+      image: string;
     };
     accessToken: string | JWT;
   }
@@ -40,6 +40,7 @@ declare module 'next-auth/jwt' {
         name: string;
       };
       nickname: string;
+      profile: string;
     };
   }
 }
@@ -87,6 +88,7 @@ const authOptions: NextAuthConfig = {
           id: true,
           createdAt: true,
           nickname: true,
+          profile: true,
           oauthProvider: {
             select: {
               name: true,
@@ -103,8 +105,10 @@ const authOptions: NextAuthConfig = {
         Object.assign(token, { user });
       }
       if (trigger === 'update' && session) {
-        Object.assign(token, { user: session.user });
-        token.picture = session.user.image;
+        token.picture = session.profile;
+        token.user.profile = session.profile;
+        token.user.nickname = session.nickname;
+        return token;
       }
       return token;
     },
@@ -115,6 +119,7 @@ const authOptions: NextAuthConfig = {
         session.user.role = token.user.role;
         session.user.oauthProvider = token.user.oauthProvider;
         session.user.nickname = token.user.nickname;
+        session.user.image = token.user.profile;
         session.accessToken = token.accessToken;
       }
       return session;
