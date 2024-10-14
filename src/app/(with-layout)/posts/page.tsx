@@ -1,8 +1,14 @@
+import { Metadata } from 'next';
 import Pagination from '@/components/Pagination';
 import Title from '@/components/Title';
 import ArticleList from '@/containers/post/ArticleList';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getPosts } from '@/services/posts';
+
+export const metadata: Metadata = {
+  title: '모든글',
+  description: '모든 글을 볼 수 있는 페이지입니다.',
+};
 
 const page = async ({
   searchParams,
