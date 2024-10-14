@@ -10,6 +10,7 @@ import PostMenu from '@/containers/post/PostMenu';
 import InnerLayout from '@/layouts/InnerLayout';
 import { getPostDetail, getPostDetailNavigation } from '@/services/posts';
 import { formatDate } from '@/utils/convert';
+import { extractTextFromHtml } from '@/utils/html';
 import prisma from '../../../../../prisma/client';
 
 export const revalidate = 60;
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     description: postDetail.content,
     openGraph: {
       title: postDetail.title,
-      description: postDetail.content,
+      description: extractTextFromHtml(postDetail.content),
       images: [postDetail.thumbnail],
     },
     image: postDetail.thumbnail,
