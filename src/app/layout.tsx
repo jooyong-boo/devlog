@@ -11,6 +11,10 @@ import { tailwindTheme } from '@/utils/tailwindTheme';
 export const metadata: Metadata = {
   title: 'DEVLOG - jooyong',
   description: "jooyong's devlog",
+  openGraph: {
+    title: 'DEVLOG - jooyong',
+    description: "jooyong's devlog",
+  },
   verification: {
     google: 'x7Bur4_X_TYpLXkE7noT1Xu4guTZ0tejfFAYbNuF_Kg',
   },
