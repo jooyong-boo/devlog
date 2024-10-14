@@ -5,6 +5,19 @@ import InnerLayout from '@/layouts/InnerLayout';
 import { getTagsRelatedPosts } from '@/services/tags';
 import prisma from '../../../../../prisma/client';
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { name: string };
+}) {
+  const { name } = params;
+
+  return {
+    title: decodeURIComponent(name),
+    description: `${decodeURIComponent(name)} 태그와 관련된 글들을 모아놓은 페이지입니다.`,
+  };
+}
+
 export const revalidate = 60;
 
 export async function generateStaticParams() {
