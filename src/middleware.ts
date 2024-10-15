@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { match } from 'path-to-regexp';
 
-const matchersForAuth = ['/posts/write']; // 인증이 필요한 페이지 경로
+const matchersForAuth = ['/posts/write', '/dashboard', '/admin']; // 인증이 필요한 페이지 경로
 const matchersForSignIn = ['/api/auth/*']; // 로그인이 필요한 페이지 경로
 
 export async function middleware(request: NextRequest) {
