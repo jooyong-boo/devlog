@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import useModal from '@/components/Modal/hooks/useModal';
 import Profile from '@/components/Profile';
 import ProfileEdit from '@/containers/header/ProfileEdit';
-import { menus } from '@/layouts/Header/constants/menu';
+import { adminMenus, menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
 const PCMenu = () => {
@@ -52,7 +52,7 @@ const PCMenu = () => {
             >
               <Close className="h-6 w-6 fill-slate-900 dark:fill-slate-50" />
             </button>
-            <div className="mb-4 mt-4 flex justify-center gap-4 border-b border-slate-600 pb-4">
+            <div className="mt-4 flex justify-center gap-4 border-b border-slate-600 pb-4">
               {session && (
                 <div className="flex flex-col gap-2">
                   <Profile>
@@ -102,16 +102,31 @@ const PCMenu = () => {
                 </>
               )}
             </div>
-            <div className="flex flex-col items-center gap-2">
-              {menus.map((menu) => (
-                <Link
-                  key={menu.title}
-                  href={menu.href}
-                  className={`hover:text-sky-600 dark:hover:text-orange-600 ${isActive(menu.href) ? 'font-semibold' : ''} text-2xl`}
-                >
-                  {menu.title}
-                </Link>
-              ))}
+            <div className="divide-y divide-slate-600">
+              <div className="flex flex-col items-center gap-2 py-4">
+                {menus.map((menu) => (
+                  <Link
+                    key={menu.title}
+                    href={menu.href}
+                    className={`hover:text-sky-600 dark:hover:text-orange-600 ${isActive(menu.href) ? 'font-semibold' : ''} text-2xl`}
+                  >
+                    {menu.title}
+                  </Link>
+                ))}
+              </div>
+              {session?.user.role.name === 'admin' && (
+                <div className="flex flex-col items-center gap-2 py-4">
+                  {adminMenus.map((menu) => (
+                    <Link
+                      key={menu.title}
+                      href={menu.href}
+                      className={`hover:text-sky-600 dark:hover:text-orange-600 ${isActive(menu.href) ? 'font-semibold' : ''} text-2xl`}
+                    >
+                      {menu.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
