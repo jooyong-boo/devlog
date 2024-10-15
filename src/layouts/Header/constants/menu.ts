@@ -5,3 +5,8 @@ export const menus = [
   { title: 'Tags', href: '/tags' },
   { title: 'About', href: '/about' },
 ];
+
+export const adminMenus = [
+  { title: 'Dashboard', href: '/dashboard' },
+  { title: 'Admin', href: '/admin' },
+];

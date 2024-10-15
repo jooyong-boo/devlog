@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import useModal from '@/components/Modal/hooks/useModal';
 import Profile from '@/components/Profile';
 import ProfileEdit from '@/containers/header/ProfileEdit';
-import { menus } from '@/layouts/Header/constants/menu';
+import { adminMenus, menus } from '@/layouts/Header/constants/menu';
 import useActive from '@/layouts/Header/hooks/useActive';
 
 function MobileMenu() {
@@ -70,7 +70,9 @@ function MobileMenu() {
                   </Profile>
                   {session.user.role.name === 'admin' && (
                     <Link href="/posts/write">
-                      <Button size="full">새 글 작성</Button>
+                      <div className="flex justify-center">
+                        <Button size="sm">새 글 작성</Button>
+                      </div>
                     </Link>
                   )}
                 </div>
@@ -94,17 +96,33 @@ function MobileMenu() {
                 </>
               )}
             </div>
-            <div className="flex flex-col items-center gap-4 py-4">
-              {menus.map((menu) => (
-                <Link
-                  key={menu.title}
-                  href={menu.href}
-                  className={` ${isActive(menu.href) ? 'font-semibold' : ''}`}
-                  onClick={() => handleMenuClose()}
-                >
-                  {menu.title}
-                </Link>
-              ))}
+            <div className="divide-y divide-slate-600">
+              <div className="flex flex-col items-center gap-4 py-4">
+                {menus.map((menu) => (
+                  <Link
+                    key={menu.title}
+                    href={menu.href}
+                    className={` ${isActive(menu.href) ? 'font-semibold' : ''}`}
+                    onClick={() => handleMenuClose()}
+                  >
+                    {menu.title}
+                  </Link>
+                ))}
+              </div>
+              {session?.user.role.name === 'admin' && (
+                <div className="flex flex-col items-center gap-4 py-4">
+                  {adminMenus.map((menu) => (
+                    <Link
+                      key={menu.title}
+                      href={menu.href}
+                      className={` ${isActive(menu.href) ? 'font-semibold' : ''}`}
+                      onClick={() => handleMenuClose()}
+                    >
+                      {menu.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
