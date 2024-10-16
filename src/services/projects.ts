@@ -1,4 +1,4 @@
-import { getData, postData } from '@/services/customAxios';
+import { getData, patchData, postData } from '@/services/customAxios';
 import { CreateProjectRequest } from '@/types/project';
 import {
   PostsByProjectPagination,
@@ -34,4 +34,17 @@ export const getProjectRelatedPosts = async ({
       page,
     },
   );
+};
+
+export const patchProjectOrder = async ({
+  movedId,
+  targetId,
+}: {
+  movedId: string | number;
+  targetId: string | number;
+}): Promise<void> => {
+  return await patchData<void>('/api/projects/reorder', {
+    movedId,
+    targetId,
+  });
 };
