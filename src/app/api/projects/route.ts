@@ -7,6 +7,9 @@ export async function GET(req: NextRequest) {
   try {
     const projectList = await prisma.projects.findMany({
       ...projectQueryOptions,
+      orderBy: {
+        sort: 'asc',
+      },
     });
 
     const response: NextResponse<ProjectResult[]> = NextResponse.json(
