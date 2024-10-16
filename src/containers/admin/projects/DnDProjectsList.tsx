@@ -18,6 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import ListItem from '@/containers/admin/projects/ListItem';
+import useToast from '@/hooks/useToast';
 import { patchProjectOrder } from '@/services/projects';
 import { ProjectResult } from '@/types/project.prisma';
 
@@ -26,6 +27,8 @@ interface DnDProjectsListProps {
 }
 
 const DnDProjectsList = ({ lists }: DnDProjectsListProps) => {
+  const { enqueueSuccessBar, enqueueErrorBar } = useToast();
+
   const [sortList, setSortList] = useState<ProjectResult[]>(lists);
 
   const sensors = useSensors(
@@ -35,24 +38,32 @@ const DnDProjectsList = ({ lists }: DnDProjectsListProps) => {
     }),
   );
 
-  function handleDragEnd(event: DragEndEvent) {
+  async function handleDragEnd(event: DragEndEvent) {
     const prevSortList = sortList;
 
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
+      const oldIndex = sortList.findIndex(
+        (list) => String(list.sort) === active.id,
+      );
+      const newIndex = sortList.findIndex(
+        (list) => String(list.sort) === over.id,
+      );
       setSortList((sortList) => {
-        const oldIndex = sortList.findIndex((list) => list.id === active.id);
-        const newIndex = sortList.findIndex((list) => list.id === over.id);
         const newList = arrayMove(sortList, oldIndex, newIndex);
-
         return [...newList];
       });
 
       try {
-        patchProjectOrder({ movedId: active.id, targetId: over.id });
+        const result = await patchProjectOrder({
+          movedSort: sortList[oldIndex].sort,
+          targetSort: sortList[newIndex].sort,
+        });
+        enqueueSuccessBar('순서가 변경되었습니다.', 'success');
       } catch (error) {
         setSortList(prevSortList);
+        enqueueErrorBar('순서 변경에 실패했습니다.', 'error');
       }
     }
   }
@@ -63,10 +74,13 @@ const DnDProjectsList = ({ lists }: DnDProjectsListProps) => {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={sortList} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={sortList.map((item) => item.sort.toString())}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="flex flex-col gap-2">
           {sortList.map((list) => (
-            <ListItem key={list.id} item={list} id={list.id} />
+            <ListItem key={list.id} item={list} id={list.sort.toString()} />
           ))}
         </div>
       </SortableContext>
