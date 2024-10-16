@@ -1,5 +1,5 @@
 export interface CreateProjectRequest {
   name: string;
-  image?: string;
+  image?: File;
   desc: string;
 }

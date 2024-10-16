@@ -12,9 +12,14 @@ export const getProjects = async (): Promise<ProjectResult[]> => {
 export const postProjects = async (
   data: CreateProjectRequest,
 ): Promise<ProjectResult> => {
-  return await postData<ProjectResult>('/api/projects', {
-    ...data,
-  });
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('desc', data.desc);
+  if (data.image) {
+    formData.append('image', data.image);
+  }
+
+  return await postData<ProjectResult>('/api/projects', formData);
 };
 
 export const getProjectRelatedPosts = async ({
@@ -37,14 +42,14 @@ export const getProjectRelatedPosts = async ({
 };
 
 export const patchProjectOrder = async ({
-  movedId,
-  targetId,
+  movedSort,
+  targetSort,
 }: {
-  movedId: string | number;
-  targetId: string | number;
-}): Promise<void> => {
-  return await patchData<void>('/api/projects/reorder', {
-    movedId,
-    targetId,
+  movedSort: string | number;
+  targetSort: string | number;
+}): Promise<ProjectResult[]> => {
+  return await patchData('/api/projects/reorder', {
+    movedSort,
+    targetSort,
   });
 };
