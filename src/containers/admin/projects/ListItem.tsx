@@ -29,7 +29,7 @@ const ListItem = ({ item, id }: ListItemProps) => {
       {...listeners}
       className="flex items-center rounded-md bg-slate-200 p-2 dark:bg-slate-700"
     >
-      <div>
+      <div className="fill-slate-700 dark:fill-slate-300">
         <Menu width={24} heigth={24} />
       </div>
       <Image
@@ -43,14 +43,14 @@ const ListItem = ({ item, id }: ListItemProps) => {
         className="mx-4 aspect-square rounded-full object-cover"
       />
       <div>
-        <p className="text-slate-200">{name}</p>
+        <p className="text-slate-600 dark:text-slate-200">{name}</p>
         <p className="text-xs text-slate-400">{_count.posts} Posts</p>
       </div>
       <div className="flex flex-grow justify-end">
-        <p className="text-slate-200">{desc}</p>
+        <p className="text-slate-600 dark:text-slate-200">{desc}</p>
       </div>
       <div className="flex flex-grow justify-end">
-        <button className="fill-slate-300">
+        <button className="fill-slate-700 dark:fill-slate-300">
           <Edit width={22} height={22} />
         </button>
       </div>
