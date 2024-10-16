@@ -19,3 +19,4 @@ export { default as Folder } from './folder.svg';
 export { default as BurgerMenu } from './burger_menu.svg';
 export { default as User } from './user.svg';
 export { default as Article } from './article.svg';
+export { default as Edit } from './edit.svg';
