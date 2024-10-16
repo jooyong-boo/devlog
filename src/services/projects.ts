@@ -1,4 +1,4 @@
-import { getData, postData } from '@/services/customAxios';
+import { getData, patchData, postData } from '@/services/customAxios';
 import { CreateProjectRequest } from '@/types/project';
 import {
   PostsByProjectPagination,
@@ -12,9 +12,14 @@ export const getProjects = async (): Promise<ProjectResult[]> => {
 export const postProjects = async (
   data: CreateProjectRequest,
 ): Promise<ProjectResult> => {
-  return await postData<ProjectResult>('/api/projects', {
-    ...data,
-  });
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('desc', data.desc);
+  if (data.image) {
+    formData.append('image', data.image);
+  }
+
+  return await postData<ProjectResult>('/api/projects', formData);
 };
 
 export const getProjectRelatedPosts = async ({
@@ -34,4 +39,17 @@ export const getProjectRelatedPosts = async ({
       page,
     },
   );
+};
+
+export const patchProjectOrder = async ({
+  movedSort,
+  targetSort,
+}: {
+  movedSort: string | number;
+  targetSort: string | number;
+}): Promise<ProjectResult[]> => {
+  return await patchData('/api/projects/reorder', {
+    movedSort,
+    targetSort,
+  });
 };

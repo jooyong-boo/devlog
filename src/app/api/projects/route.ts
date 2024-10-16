@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { postImages } from '@/services/images';
 import { CreateProjectRequest } from '@/types/project';
 import { projectQueryOptions, ProjectResult } from '@/types/project.prisma';
 import prisma from '../../../../prisma/client';
@@ -7,6 +8,9 @@ export async function GET(req: NextRequest) {
   try {
     const projectList = await prisma.projects.findMany({
       ...projectQueryOptions,
+      orderBy: {
+        sort: 'asc',
+      },
     });
 
     const response: NextResponse<ProjectResult[]> = NextResponse.json(
@@ -25,7 +29,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, image, desc }: CreateProjectRequest = await req.json();
+  const formData = await req.formData();
+
+  const name = formData.get('name') as string;
+  const desc = formData.get('desc') as string;
+  const image = formData.get('image') as File;
 
   try {
     const project = await prisma.projects.findFirst({
@@ -50,10 +58,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    const uploadImage = image.size
+      ? await postImages({
+          file: image,
+          folder: `projects/${name}`,
+        })
+      : { imageUrl: undefined };
+
     await prisma.projects.create({
       data: {
         name,
-        image,
+        image: uploadImage.imageUrl,
         desc,
         sort: projectSort ? projectSort.sort + 1 : 0,
       },
