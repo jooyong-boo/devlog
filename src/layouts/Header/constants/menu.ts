@@ -7,6 +7,6 @@ export const menus = [
 ];
 
 export const adminMenus = [
-  { title: 'Dashboard', href: '/dashboard' },
+  { title: 'Dashboard', href: '/admin/dashboard' },
   { title: 'Admin', href: '/admin' },
 ];
