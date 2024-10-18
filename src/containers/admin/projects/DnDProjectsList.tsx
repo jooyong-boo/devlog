@@ -9,7 +9,6 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -32,7 +31,12 @@ const DnDProjectsList = ({ lists }: DnDProjectsListProps) => {
   const [sortList, setSortList] = useState<ProjectResult[]>(lists);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -56,7 +60,7 @@ const DnDProjectsList = ({ lists }: DnDProjectsListProps) => {
       });
 
       try {
-        const result = await patchProjectOrder({
+        await patchProjectOrder({
           movedSort: sortList[oldIndex].sort,
           targetSort: sortList[newIndex].sort,
         });
